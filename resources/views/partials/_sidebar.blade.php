@@ -20,6 +20,7 @@
                     <li class="{{ request()->is('master/position*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.position') }}">Jabatan</a></li>
                     <li class="{{ request()->is('master/leave-type*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.leave-type') }}">Tipe Cuti</a></li>
                     <li class="{{ request()->is('master/employee-type*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.employee-type') }}">Tipe Karyawan</a></li>
+                    <li class="{{ request()->is('master/employee-level*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.employee-level') }}">Golongan Karyawan</a></li>
                 </ul>
             </li>
             <li class=""><a class="nav-link" href="{{ route('dashboard') }}"><i class="fas fa-users"></i> <span>Data Karyawan</span></a></li>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Master\CompanyController;
 use App\Http\Controllers\Master\DivisionController;
+use App\Http\Controllers\Master\EmployeeLevelController;
 use App\Http\Controllers\Master\EmployeeTypeController;
 use App\Http\Controllers\Master\LeaveTypeController;
 use App\Http\Controllers\Master\PositionController;
@@ -64,6 +65,14 @@ Route::group(['middleware' => ['auth']], function(){
             Route::delete('/{id}',[EmployeeTypeController::class, 'delete'])->name('employee-type.delete');
             Route::post('/data/json',[EmployeeTypeController::class, 'dataJson'])->name('employee-type.json');
             Route::post('/',[EmployeeTypeController::class, 'updateOrCreate'])->name('employee-type.submit');
+        });
+
+        Route::group(['prefix' => 'employee-level'], function(){
+            Route::get('/',[EmployeeLevelController::class, 'index'])->name('employee-level');
+            Route::get('/{id}',[EmployeeLevelController::class, 'detail'])->name('employee-level.detail');
+            Route::delete('/{id}',[EmployeeLevelController::class, 'delete'])->name('employee-level.delete');
+            Route::post('/data/json',[EmployeeLevelController::class, 'dataJson'])->name('employee-level.json');
+            Route::post('/',[EmployeeLevelController::class, 'updateOrCreate'])->name('employee-level.submit');
         });
     });
 
