@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompanies extends Migration
+class CreateWebMenus extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateCompanies extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('web_menus', function (Blueprint $table) {
             $table->id();
-            $table->string('company_code',20)->unique()->comment('ex: PER-00001');
+            $table->unsignedBigInteger('parent_id')->nullable()->comment('self join');
             $table->string('name');
-            $table->string('address');
-            $table->string('phone',20);
-            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +28,6 @@ class CreateCompanies extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('web_menus');
     }
 }

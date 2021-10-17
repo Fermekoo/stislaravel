@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompanies extends Migration
+class CreateEmployeeDivisions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateCompanies extends Migration
      */
     public function up()
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('employee_divisions', function (Blueprint $table) {
             $table->id();
-            $table->string('company_code',20)->unique()->comment('ex: PER-00001');
+            $table->unsignedBigInteger('company_id');
+            $table->string('division_code',20)->unique()->comment('ex: DIV-000001');
             $table->string('name');
-            $table->string('address');
-            $table->string('phone',20);
-            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateCompanies extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('employee_divisions');
     }
 }
