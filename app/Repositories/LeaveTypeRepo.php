@@ -1,34 +1,33 @@
 <?php 
 namespace App\Repositories;
 
-use App\Models\Division;
+use App\Models\LeaveType;
 use App\Support\CodeGenerator;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
-class DivisionRepo
+class LeaveTypeRepo
 {
     public function getAll()
     {
-        return Division::auth()->has('company')->get();
+        return LeaveType::auth()->get();
     }
 
     public function updateOrCreate($request)
     {
-        $division = Division::auth()->find($request->divisionId);
+        $leaveType = LeaveType::auth()->find($request->leaveTypeId);
 
         try {
 
-            if($division) {
-                $division->company_id = (auth()->user()->user_type == 'admin') ? $request->companyId : $division->company_id;
-                $division->name       = $request->namaDivisi;
-                $division->save();
+            if($leaveType) {
+                $leaveType->company_id = (auth()->user()->user_type == 'admin') ? $request->companyId : $leaveType->company_id;
+                $leaveType->name       = $request->tipeCuti;
+                $leaveType->save();
 
             } else {
-                Division::create([
+                LeaveType::create([
                     'company_id'    => (auth()->user()->user_type == 'admin') ? $request->companyId : auth()->user()->company_id,
-                    'division_code' => CodeGenerator::divisionCode(),
-                    'name'          => $request->namaDivisi,
+                    'name'          => $request->tipeCuti,
                 ]);
             }
             
@@ -42,11 +41,11 @@ class DivisionRepo
 
     public function findById($id)
     {
-        return Division::auth()->findOrFail($id);
+        return LeaveType::auth()->findOrFail($id);
     }
 
     public function delete($id)
     {
-        return Division::auth()->where('id',$id)->delete();
+        return LeaveType::auth()->where('id',$id)->delete();
     }
 }

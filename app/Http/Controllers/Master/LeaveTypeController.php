@@ -3,30 +3,33 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\CompanyRepo;
+use App\Repositories\LeaveTypeRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
-class CompanyController extends Controller
+class LeaveTypeController extends Controller
 {
-    protected $companyRepo;
-    public function __construct(CompanyRepo $companyRepo)
+    protected $leaveTypeRepo;
+    public function __construct(LeaveTypeRepo $leaveTypeRepo)
     {
-        $this->companyRepo = $companyRepo;
+        $this->leaveTypeRepo = $leaveTypeRepo;
     }
 
     public function index()
     {
-        return view('master.company.index');
+        return view('master.leave-type.index');
     }
 
     public function dataJson()
     {
-        $companies = $this->companyRepo->getAll();
+        $companies = $this->leaveTypeRepo->getAll();
 
         $data = DataTables::of($companies)
                 ->addIndexColumn()
+                ->addColumn('company', function($row){
+                    return $row->company->name;
+                })
                 ->toJson(true);
 
         return $data;
@@ -35,12 +38,9 @@ class CompanyController extends Controller
     public function updateOrCreate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'companyId'         => 'nullable',
-            'namaPerusahaan'    => 'required',
-            'nomorTelpon'       => 'required',
-            'alamat'            => 'required',
-            'username'          => 'required|unique:users,username,'.$request->companyId,
-            'password'          => 'nullable|min:6'
+            'leaveTypeId' => 'nullable',
+            'companyId'   => 'nullable',
+            'tipeCuti'    => 'required',
         ]);
 
         if($validator->fails()){
@@ -50,7 +50,7 @@ class CompanyController extends Controller
         }
 
         try {
-            $this->companyRepo->updateOrCreate($request);
+            $this->leaveTypeRepo->updateOrCreate($request);
         } catch (\Exception $e) {
             return $this->bad('terjadi kesalahan', 500, $e->getMessage());
         }
@@ -60,13 +60,13 @@ class CompanyController extends Controller
 
     public function detail($id)
     {
-        return $this->ok('company', 200, $this->companyRepo->findById($id));
+        return $this->ok('company', 200, $this->leaveTypeRepo->findById($id));
     }
 
     public function delete($id)
     {
         try {
-            $this->companyRepo->delete($id);
+            $this->leaveTypeRepo->delete($id);
         } catch (\Exception $e) {
             return $this->bad('terjadi kesalahan', 500, $e->getMessage());
         }

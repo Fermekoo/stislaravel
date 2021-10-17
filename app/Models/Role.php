@@ -182,4 +182,16 @@ class Role extends Model implements RoleContract
 
         return $this->permissions->contains('id', $permission->id);
     }
+
+    public function getPermissionNamesAttribute()
+    {
+        return $this->permissions()->get()->map(function($item){
+            return $item->name;
+        })->toArray();
+    }
+
+    public function scopeAuth($query)
+    {
+        return $query->where('company_id', auth()->user()->company_id);
+    }
 }

@@ -19,7 +19,7 @@ class Division extends Model
         
         if(auth()->check()) {
             return $query->when(auth()->user()->user_type != 'admin', function($q){
-                return $q->where('company_id', auth()->use()->company_id);
+                return $q->where('company_id', auth()->user()->company_id);
             });
         }
     }

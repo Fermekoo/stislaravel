@@ -9,6 +9,6 @@ class ViewServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        View::composer(['master.division._modal','master.position._modal'], CompanyComposer::class);
+        View::composer(['master.division._modal','master.position._modal','master.leave-type._modal'], CompanyComposer::class);
     }
 }

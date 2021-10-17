@@ -10,7 +10,7 @@ class PositionRepo
 {
     public function getAll()
     {
-        return Position::auth()->get();
+        return Position::auth()->has('company')->get();
     }
 
     public function updateOrCreate($request)

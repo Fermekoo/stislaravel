@@ -2,13 +2,13 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Master Perusahaan</h1>
+        <h1>Master Tipe Karyawan</h1>
     </div>
 
     <div class="section-body">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4>Data Perusahaan</h4>
+                <h4>Data Tipe Karyawan</h4>
                 <div class="d-flex flex-row">
                     <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button>
                 </div>
@@ -18,11 +18,9 @@
                     <table class="table table-striped table-md" id="index-table" width='100%'>
                         <thead>
                             <tr>
-                                <th>Kode Perusahaan</th>
+                                <th>No</th>
+                                <th>Tipe Karyawan</th>
                                 <th>Nama Perusahaan</th>
-                                <th>Nomor Telpon</th>
-                                <th>Alamat</th>
-                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -36,7 +34,7 @@
         </div>
     </div>
 </section>
-@include('master.company._modal')
+@include('master.employee-type._modal')
 @endsection
 @push('js')
 <script>
@@ -53,14 +51,12 @@
 			serverSide: true,
 			ajax: {
                 type: 'POST',
-                url: '{{ route("master.company.json") }}'
+                url: '{{ route("master.employee-type.json") }}'
             },
 			columns: [
-				{ data: 'company_code', name: 'company_code' },
+				{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
 				{ data: 'name', name: 'name' },
-				{ data: 'phone', name: 'phone' },
-				{ data: 'address', name: 'address' },
-				{ data: 'status', name: 'status' },
+				{ data: 'company', name: 'company' },
 				{ data: 'action', render: function(data, type, row){
                     return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> <button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>`
                 } },
@@ -69,8 +65,8 @@
 
         $('#add-data').click(function(){
             titleCaption('Tambah Data', 'Simpan');
-            $('#pw_caption').hide();
-            $('#company_modal').modal({
+            
+            $('#form_modal').modal({
                 show: true,
                 backdrop: 'static',
                 keyboard: false
@@ -78,23 +74,21 @@
         });
 
         $('#index-table').on('click','.btnedit', function(){
-            $('#pw_caption').show();
+
             let id = $(this).data('id');
-            let action = `{{ route('master.company.detail',':id') }}`;
+            let action = `{{ route('master.employee-type.detail',':id') }}`;
             $.ajax({
                 type: `GET`,
                 url: action.replace(':id', id),
                 success: function(res){
                     let data = res.data;
                     $('#id').val(data.id);
-                    $('#namaPerusahaan').val(data.name);
-                    $('#nomorTelpon').val(data.phone);
-                    $('#alamat').val(data.address);
-                    $('#username').val(data.admin.username);
+                    $('#tipeKaryawan').val(data.name);
+                    $('#companyId').val(data.company_id).trigger('change');
 
                     titleCaption('Edit Data', 'Ubah');
 
-                    $('#company_modal').modal({
+                    $('#form_modal').modal({
                         show: true,
                         backdrop: 'static',
                         keyboard: false
@@ -106,7 +100,7 @@
 
         $('#index-table').on('click', '.btndelete', function(){
             let id = $(this).data('id');
-            let action = `{{ route('master.company.delete',':id') }}`;
+            let action = `{{ route('master.employee-type.delete',':id') }}`;
 
             swal({
 				title: 'Apakah Anda Yakin Ingin Menghapus ?',
@@ -151,12 +145,12 @@
 
             $.ajax({
                 type: `POST`,
-                url: `{{ route('master.company.submit') }}`,
+                url: `{{ route('master.employee-type.submit') }}`,
                 data: form.serialize(),
                 dataType: `json`,
                 success: function(res) {
                     table.ajax.reload();
-                    $('#company_modal').modal('hide');
+                    $('#form_modal').modal('hide');
                     iziToast.success({
 						title: res.message,
 						position: 'topRight'
@@ -168,20 +162,11 @@
                     if($.isEmptyObject(res) == false) {
                         let msg = res.message;
                         if(msg instanceof Object) {
-                            if(msg.namaPerusahaan) {
-                                $('#namaPerusahaan').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.namaPerusahaan}</div>`)
+                            if(msg.tipeKaryawan) {
+                                $('#tipeKaryawan').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.tipeKaryawan}</div>`)
                             }
-                            if(msg.alamat) {
-                                $('#alamat').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.alamat}</div>`)
-                            }
-                            if(msg.nomorTelpon) {
-                                $('#nomorTelpon').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.nomorTelpon}</div>`)
-                            }
-                            if(msg.username) {
-                                $('#username').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.username}</div>`)
-                            }
-                            if(msg.password) {
-                                $('#password').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.password}</div>`)
+                            if(msg.companyId) {
+                                $('#companyId').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.companyId}</div>`)
                             }
                             return
                         }
@@ -190,13 +175,10 @@
             })
         })
 
-        $('#company_modal').on('hidden.bs.modal', function(){
+        $('#form_modal').on('hidden.bs.modal', function(){
             $('#id').val('');
-            $('#namaPerusahaan').val('');
-            $('#nomorTelpon').val('');
-            $('#alamat').val('');
-            $('#username').val('');
-            $('#password').val('');
+            $('#tipeKaryawan').val('');
+            $('#companyId').val('').trigger('change');
             clearError();
         });
     });

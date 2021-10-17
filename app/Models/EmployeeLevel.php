@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Position extends Model
+class EmployeeLevel extends Model
 {
-    protected $table   = 'employee_roles';
+    protected $table = 'employee_levels';
     protected $guarded = [];
 
     public function company()

@@ -23,6 +23,16 @@
 						<label>ALAMAT</label>
 						<textarea class="form-control" id="alamat" name="alamat"></textarea>
 					</div>
+
+					<div class="form-group">
+						<label>USERNAME</label>
+						<input type="text" class="form-control" id="username" name="username">
+					</div>
+					<div class="form-group">
+						<label>PASSWORD</label>
+						<input type="password" class="form-control" id="password" name="password">
+						<code id="pw_caption">Kosongkan jika tidak ingin merubah password</code>
+					</div>
 					
 				</form>
 			</div>
