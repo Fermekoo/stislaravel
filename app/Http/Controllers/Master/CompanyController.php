@@ -39,7 +39,7 @@ class CompanyController extends Controller
             'namaPerusahaan'    => 'required',
             'nomorTelpon'       => 'required',
             'alamat'            => 'required',
-            'username'          => 'required|unique:users,username,'.$request->companyId,
+            'username'          => 'required|unique:users,username,'.$this->companyRepo->companyUserId($request->companyId),
             'password'          => 'nullable|min:6'
         ]);
 

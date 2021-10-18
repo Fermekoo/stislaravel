@@ -35,8 +35,23 @@ class PermissionSeeder extends Seeder
                         'menu'      => 'mst-jenis-cuti',
                         'name'      => 'Jenis Cuti',
                         'childs'    => []
+                    ],
+                    [
+                        'menu'      => 'mst-status-karyawan',
+                        'name'      => 'Status Karyawan',
+                        'childs'    => []
+                    ],
+                    [
+                        'menu'      => 'mst-golongan-karyawan',
+                        'name'      => 'Golongan Karyawan',
+                        'childs'    => []
                     ]
                 ]
+            ],
+            [
+                'menu'      => 'data-karyawan',
+                'name'      => 'Data Karyawan',
+                'childs'    => []
             ],
             [
                 'menu'      => 'absen-cuti',
@@ -45,6 +60,11 @@ class PermissionSeeder extends Seeder
                     [
                         'menu'      => 'cuti',
                         'name'      => 'Cuti Karyawan',
+                        'childs'    => []
+                    ],
+                    [
+                        'menu'      => 'absensi',
+                        'name'      => 'Absensi',
                         'childs'    => []
                     ],
                     [

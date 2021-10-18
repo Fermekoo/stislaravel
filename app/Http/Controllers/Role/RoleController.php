@@ -29,7 +29,7 @@ class RoleController extends Controller
         return DataTables::of($this->roleRepo->getAll())
                 ->addIndexColumn()
                 ->editColumn('name', function($row){
-                    return explode('#',$row->name)[1];
+                    return $row->display;
                 })
                 ->addColumn('action', function($row){
                     return route('roles.edit', $row->id);

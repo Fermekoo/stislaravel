@@ -78,4 +78,11 @@ class CompanyRepo
     {
         return Company::destroy($id);
     }
+
+    public function companyUserId($company_id)
+    {
+        $user = User::where('user_type','company')->where('company_id', $company_id)->first();
+
+        return ($user) ? $user->id : null;
+    }
 }

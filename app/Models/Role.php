@@ -194,4 +194,10 @@ class Role extends Model implements RoleContract
     {
         return $query->where('company_id', auth()->user()->company_id);
     }
+
+    public function getDisplayAttribute()
+    {
+        $names = explode('#',$this->name);
+        return (array_key_exists(1, $names)) ? $names[1] : $names[0];
+    }
 }

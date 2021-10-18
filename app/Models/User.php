@@ -21,7 +21,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'user_type'
+        'user_type',
+        'company_id'
     ];
 
     /**
@@ -46,5 +47,20 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'user_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsToMany(Role::class, 'model_has_roles','model_id','role_id');
+    }
+
+    public function scopeAuth($query)
+    {
+        return $query->where('company_id', auth()->user()->company_id);
     }
 }

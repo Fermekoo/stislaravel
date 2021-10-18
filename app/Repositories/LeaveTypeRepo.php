@@ -10,7 +10,7 @@ class LeaveTypeRepo
 {
     public function getAll()
     {
-        return LeaveType::auth()->get();
+        return LeaveType::auth()->has('company')->get();
     }
 
     public function updateOrCreate($request)

@@ -24,7 +24,7 @@ class CreateEmployees extends Migration
             $table->string('employee_code');
             $table->string('name');
             $table->string('phone');
-            $table->text('alamat');
+            $table->text('address');
             $table->string('avatar')->nullable();
             $table->enum('gender',['Laki-Laki','Perempuan']);
             $table->enum('status',['Active','Non-Active'])->default('Active');
