@@ -1,6 +1,7 @@
 <?php 
 namespace App\Repositories;
 
+use App\Models\AttendanceTimeConfig;
 use App\Models\Company;
 use App\Models\User;
 use App\Support\CodeGenerator;
@@ -52,6 +53,10 @@ class CompanyRepo
                 ]);
 
                 $user->assignRole('ROOT');
+
+                AttendanceTimeConfig::create([
+                    'company_id' => $company->id
+                ]);
             }
             
         } catch (QueryException $e) {

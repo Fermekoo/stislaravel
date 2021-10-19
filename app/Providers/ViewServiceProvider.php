@@ -15,7 +15,8 @@ class ViewServiceProvider extends ServiceProvider
             'master.leave-type._modal',
             'master.employee-type._modal',
             'master.employee-level._modal',
-            'employee._modal'
+            'employee._modal',
+            'time-config.index'
         ], CompanyComposer::class);
     }
 }

@@ -7,6 +7,7 @@ use App\Repositories\EmployeeLevelRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
 
 class EmployeeLevelController extends Controller
 {
@@ -39,7 +40,9 @@ class EmployeeLevelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'employeeLevelId'  => 'nullable',
-            'companyId'        => 'nullable',
+            'companyId'  => Rule::requiredIf(function(){
+                return auth()->user()->user_type == 'admin';
+            }),
             'golongan'         => 'required',
         ]);
 

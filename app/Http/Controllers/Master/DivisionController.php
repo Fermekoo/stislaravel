@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\DivisionRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
 
 class DivisionController extends Controller
@@ -39,7 +40,9 @@ class DivisionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'divisionId' => 'nullable',
-            'companyId'  => 'nullable',
+            'companyId'  => Rule::requiredIf(function(){
+                return auth()->user()->user_type == 'admin';
+            }),
             'namaDivisi' => 'required',
         ]);
 

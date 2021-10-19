@@ -39,6 +39,18 @@ class Employee extends Model
         return $this->belongsTo(EmployeeLevel::class, 'level_id');
     }
 
+    public function leavequota()
+    {
+        return $this->hasMany(LeaveQuota::class, 'employee_id');
+    }
+
+    public function getAvailablequotaAttribute()
+    {
+        $leaves = $this->leavequota()->get();
+
+        return ($leaves->isNotEmpty()) ? $leaves->sum('available_quota') : 0;
+    }
+
     public function scopeAuth($query)
     {
         if (auth()->check()) {

@@ -13,4 +13,9 @@ class Company extends Model
     {
         return $this->hasOne(User::class, 'company_id')->where('user_type', 'company');
     }
+
+    public function timeattendance()
+    {
+        return $this->hasOne(AttendanceTimeConfig::class, 'company_id');
+    }
 }

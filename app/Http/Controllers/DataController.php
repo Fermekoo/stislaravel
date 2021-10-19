@@ -35,9 +35,9 @@ class DataController extends Controller
         return $this->ok('division', 200, $this->dataRepo->employeeType($company_id));
     }
     
-    public function anualType($company_id)
+    public function leaveType($company_id)
     {
-        return $this->ok('division', 200, $this->dataRepo->anualType($company_id));
+        return $this->ok('division', 200, $this->dataRepo->leaveType($company_id));
     }
 
     public function employeesNoRole()

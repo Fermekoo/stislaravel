@@ -24,13 +24,13 @@
                 </ul>
             </li>
             <li class="{{ request()->is('employee*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('employee') }}"><i class="fas fa-users"></i> <span>Data Karyawan</span></a></li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown {{ request()->is('attendance-leave*')  ? 'active' : ''}}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar-check"></i> <span>Absen Dan Cuti</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{ request()->is('master/company*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.company') }}">Absensi</a></li>
                     <li class="{{ request()->is('master/company*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.company') }}">Cuti Karyawan</a></li>
-                    <li class="{{ request()->is('master/division*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.division') }}">Setting Absensi</a></li>
-                    <li class="{{ request()->is('master/position*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('master.position') }}">Jatah Cuti</a></li>
+                    <li class="{{ request()->is('attendance-leave/time-config*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.time-config') }}">Setting Absensi</a></li>
+                    <li class="{{ request()->is('attendance-leave/leave-quota*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.leave-quota') }}">Jatah Cuti</a></li>
                 </ul>
             </li>
             <li class="{{ request()->is('user*') ? 'active' : ''}}"><a class="nav-link" href="{{ route('user') }}"><i class="fas fa-user"></i> <span>User</span></a></li>

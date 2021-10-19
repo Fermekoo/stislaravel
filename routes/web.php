@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Attendance\ConfigController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\Employee\EmployeeController;
+use App\Http\Controllers\Leave\QuotaController;
 use App\Http\Controllers\Master\CompanyController;
 use App\Http\Controllers\Master\DivisionController;
 use App\Http\Controllers\Master\EmployeeLevelController;
@@ -104,6 +106,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('employee-type/{company_id}',[DataController::class, 'employeeType'])->name('employee-type');
         Route::get('leave-type/{company_id}',[DataController::class, 'leaveType'])->name('leave-type');
         Route::get('employees-no-role',[DataController::class, 'employeesNoRole'])->name('employee');
+        Route::get('time-config/{company_id}',[ConfigController::class, 'getTimeConfig'])->name('time-config');
     });
 
     Route::group(['prefix' => 'user'], function(){
@@ -118,6 +121,18 @@ Route::group(['middleware' => ['auth']], function(){
         Route::post('assign-role',[UserController::class, 'assignRoleToEmployee'])->name('user-employee.submit');
         Route::delete('delete/{model_id}/{role_id}',[UserController::class, 'deleteEmployeeRole'])->name('user-employee.delete');
     });
+
+    Route::group(['prefix' => 'attendance-leave', 'as' => 'al.'], function(){
+        Route::get('time-config',[ConfigController::class, 'index'])->name('time-config');
+        Route::post('time-config',[ConfigController::class, 'updateTimeConfig'])->name('time-config.submit');
+
+        Route::get('leave-quota',[QuotaController::class, 'index'])->name('leave-quota');
+        Route::get('leave-quota/{employee_id}',[QuotaController::class, 'getQuota'])->name('leave-quota-employee');
+        Route::post('leave-quota/{employee_id}',[QuotaController::class, 'setQuota'])->name('leave-quota-employee.submit');
+        Route::post('/data/json',[EmployeeController::class, 'dataJson'])->name('employee.json');
+    });
+
+
 });
 
 

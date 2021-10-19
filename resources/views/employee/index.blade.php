@@ -10,7 +10,7 @@
             <div class="card-header d-flex justify-content-between">
                 <h4>Data Karyawan</h4>
                 <div class="d-flex flex-row">
-                    <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button>
+                    <button class="btn btn-success add-satuan" id="add-data">Tambah Data</button>
                 </div>
             </div>
             <div class="card-body">
@@ -20,12 +20,13 @@
                             <tr>
                                 <th>Kode Karyawan</th>
                                 <th>Nama</th>
+                                <th>Perusahaan</th>
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
                                 <th>Gender</th>
                                 <th>No HP</th>
                                 <th>Status</th>
-                                <th>Aksi</th>
+                                <th width="15%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,6 +65,10 @@
                 {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'company',
+                    name: 'company'
                 },
                 {
                     data: 'division',

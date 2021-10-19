@@ -7,7 +7,7 @@ use App\Repositories\EmployeeRepo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-
+use Illuminate\Validation\Rule;
 class EmployeeController extends Controller
 {
     protected $employeRepo;
@@ -40,6 +40,9 @@ class EmployeeController extends Controller
                 ->addColumn('type', function($row){
                     return ($row->type) ? $row->type->name : '';
                 })
+                ->addColumn('quota', function($row){
+                    return $row->availablequota;
+                })
                 ->toJson();
 
         return $data;
@@ -49,7 +52,9 @@ class EmployeeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'employeeId'   => 'nullable',
-            'perusahaan'   => 'nullable',
+            'perusahaan'   => Rule::requiredIf(function(){
+                return auth()->user()->user_type == 'admin';
+            }),
             'fotoKaryawan' => 'nullable|image|mimes:jpg,png,jpeg',
             'divisi'       => 'required',
             'jabatan'      => 'required',
