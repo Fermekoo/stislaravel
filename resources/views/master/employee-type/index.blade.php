@@ -2,15 +2,17 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Master Tipe Karyawan</h1>
+        <h1>Master Status Karyawan</h1>
     </div>
 
     <div class="section-body">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4>Data Tipe Karyawan</h4>
+                <h4>Data Status Karyawan</h4>
                 <div class="d-flex flex-row">
+                @can('mst-status-karyawan-create')
                     <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button>
+                @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -19,7 +21,7 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Tipe Karyawan</th>
+                                <th>Status Karyawan</th>
                                 <th>Nama Perusahaan</th>
                                 <th>Aksi</th>
                             </tr>
@@ -58,7 +60,7 @@
 				{ data: 'name', name: 'name' },
 				{ data: 'company', name: 'company' },
 				{ data: 'action', render: function(data, type, row){
-                    return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> <button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>`
+                    return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> @can('mst-status-karyawan-delete')<button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
                 } },
 			]
 		})

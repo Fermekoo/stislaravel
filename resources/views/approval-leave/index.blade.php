@@ -2,15 +2,15 @@
 @section('content')
 <section class="section">
     <div class="section-header">
-        <h1>Jatah Cuti Karyawan</h1>
+        <h1>Cuti Karyawan</h1>
     </div>
 
     <div class="section-body">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
-                <h4>Data Jatah Cuti Karyawan</h4>
+                <h4>Data Cuti Karyawan</h4>
                 <div class="d-flex flex-row">
-                    <!-- <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button> -->
+
                 </div>
             </div>
             <div class="card-body">
@@ -19,12 +19,14 @@
                         <thead>
                             <tr>
                                 <th>Kode Karyawan</th>
-                                <th>Nama</th>
-                                <th>Perusahaan</th>
-                                <th>Divisi</th>
-                                <th>Jabatan</th>
-                                <th width="10%">Jatah Cuti</th>
-                                <th width="15%">Aksi</th>
+                                <th>Nama Karyawan</th>
+                                <th>Nama Perusahaan</th>
+                                <th>Cuti</th>
+                                <th>Tanggal Mulai</th>
+                                <th>Tanggal Selesai</th>
+                                <th>Durasi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,7 +39,7 @@
         </div>
     </div>
 </section>
-@include('leave-quota._modal')
+@include('approval-leave._modal')
 @endsection
 @push('js')
 <script>
@@ -54,106 +56,100 @@
             serverSide: true,
             ajax: {
                 type: 'POST',
-                url: '{{ route("al.employee.json") }}'
+                url: '{{ route("al.approval.json") }}'
             },
             columns: [{
                     data: 'employee_code',
                     name: 'employee_code'
                 },
                 {
-                    data: 'name',
-                    name: 'name'
+                    data: 'employee',
+                    name: 'employee'
                 },
                 {
                     data: 'company',
                     name: 'company'
                 },
                 {
-                    data: 'division',
-                    name: 'division'
+                    data: 'leave',
+                    name: 'leave'
                 },
                 {
-                    data: 'position',
-                    name: 'position'
+                    data: 'start_leave',
+                    name: 'start_leave'
                 },
                 {
-                    data: 'quota',
-                    name: 'quota'
+                    data: 'end_leave',
+                    name: 'end_leave'
+                },
+                {
+                    data: 'duration',
+                    name: 'duration'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
                 },
                 {
                     data: 'action',
-                    render: function(data, type, row){
-                        return `@canany(['jatah-cuti-create','jatah-cuti-update'])<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}" data-name="${row.name}" title ="Edit">Atur Cuti</button>@endcanany`;
+                    render: function(data, type, row) {
+                        return (row.status == 'Request') ? `@can('cuti-update')<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Ubah Status" data-id="${row.id}" title ="Ubah Status"><i class="fa fa-edit"></i></button>@endcan` : ''
                     }
-                }
+                },
             ]
         })
 
         $('#index-table').on('click', '.btnedit', function() {
 
-            $('#pw_caption').show();
             let id = $(this).data('id');
-            let name = $(this).data('name');
-            let action = `{{ route('al.leave-quota-employee',':id') }}`;
             $('#id').val(id);
-            $.ajax({
-                type: `GET`,
-                url: action.replace(':id', id),
-                success: function(res) {
-                    let data = res.data;
-                    let html = '';
-                    data.forEach((item, key) => {
-                        html += `<div class="form-group">
-						<label>${item.leave_type}</label>
-						<input type="hidden" name="quota[${key}][leave_type_id]" value="${item.leave_type_id}">
-						<input type="text" class="form-control" name="quota[${key}][qty]" value="${item.available_quota}">
-					</div>`
-                    });
-                    $('#cuti').html(html);
-                    titleCaption(`Jatah Cuti ${name}`, 'Simpan');
-
-                    $('#company_modal').modal({
-                        show: true,
-                        backdrop: 'static',
-                        keyboard: false
-                    });
-                }
-            });
+            $('#form_modal').modal({
+                show: true,
+                backdrop: 'static',
+                keyboard: false
+            })
         });
 
         $('#btn-submit').click(function(e) {
             e.preventDefault();
 
-            let id = $('#id').val();
-            let action = `{{ route('al.leave-quota-employee',':id') }}`;
             let form = $('#form_action');
+
             $.ajax({
                 type: `POST`,
-                url: action.replace(':id', id),
+                url: `{{ route('al.approval.submit') }}`,
                 data: form.serialize(),
                 dataType: `json`,
                 success: function(res) {
-                    console.log(res);
                     table.ajax.reload();
-                    $('#company_modal').modal('hide');
+                    $('#form_modal').modal('hide');
                     iziToast.success({
                         title: res.message,
                         position: 'topRight'
                     });
+                },
+                error: function(xhr) {
+                    clearError();
+                    let res = xhr.responseJSON;
+                    if ($.isEmptyObject(res) == false) {
+                        let msg = res.message;
+                        if (msg instanceof Object) {
+                            if (msg.status) {
+                                $('#status').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.status}</div>`)
+                            }
+                            return
+                        }
+                    }
                 }
             })
         })
 
         $('#company_modal').on('hidden.bs.modal', function() {
-            $('#cuti').html('');
+            $('#id').val(id);
+            $('#status').val('').trigger('change');
+            clearError();
         });
-
-    }); // end document ready
-
-    function titleCaption(title, button) {
-        $('#modal_title').text(title);
-        $('#btn-submit').text(button);
-    }
+    });
 
     function clearError() {
         let form = $('#form_action');

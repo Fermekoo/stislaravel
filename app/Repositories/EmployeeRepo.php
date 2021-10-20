@@ -42,6 +42,24 @@ class EmployeeRepo
             $request->file('fotoKaryawan')->storeAs('foto-karyawan', $avatar, 'public');
         }
 
+        $ktp = null;
+        if($request->hasFile('fotoKtp')) {
+            $ktp = Str::random(20).'.'.$request->fotoKtp->getClientOriginalExtension();
+            $request->file('fotoKtp')->storeAs('foto-ktp', $ktp, 'public');
+        }
+
+        $skck = null;
+        if($request->hasFile('fotoSkck')) {
+            $skck = Str::random(20).'.'.$request->fotoSkck->getClientOriginalExtension();
+            $request->file('fotoSkck')->storeAs('foto-skck', $skck, 'public');
+        }
+
+        $kontrak = null;
+        if($request->hasFile('kontrakKerja')) {
+            $kontrak = Str::random(20).'.'.$request->kontrakKerja->getClientOriginalExtension();
+            $request->file('kontrakKerja')->storeAs('kontrak', $kontrak, 'public');
+        }
+
         $company_id = (auth()->user()->user_type == 'admin') ? $request->perusahaan : auth()->user()->company_id;
 
         DB::beginTransaction();
@@ -59,15 +77,15 @@ class EmployeeRepo
         }
 
         $employee_permissions = [
-            'absen-cuti-read',
-            'cuti-create',
-            'cuti-read',
-            'cuti-update',
-            'cuti-delete',
-            'absensi-create',
-            'absensi-read',
-            'absensi-update',
-            'absensi-delete',
+            'absen-cuti-read'
+            // 'cuti-create',
+            // 'cuti-read',
+            // 'cuti-update',
+            // 'cuti-delete',
+            // 'absensi-create',
+            // 'absensi-read',
+            // 'absensi-update',
+            // 'absensi-delete',
         ];
 
         try {
@@ -89,18 +107,22 @@ class EmployeeRepo
 
         try {
             $employee = Employee::create([
-                'user_id'           => $user->id,
-                'company_id'        => $company_id,
-                'division_id'       => $request->divisi,
-                'position_id'       => $request->jabatan,
-                'employee_type_id'  => $request->status,
-                'level_id'          => $request->golongan,
-                'employee_code'     => CodeGenerator::employeeCode(),
-                'name'              => $request->namaLengkap,
-                'phone'             => $request->nomorHp,
-                'address'           => $request->alamat,
-                'avatar'            => $avatar,
-                'gender'            => $request->jenisKelamin
+                'user_id'               => $user->id,
+                'company_id'            => $company_id,
+                'division_id'           => $request->divisi,
+                'position_id'           => $request->jabatan,
+                'employee_type_id'      => $request->status,
+                'level_id'              => $request->golongan,
+                'employee_code'         => CodeGenerator::employeeCode(),
+                'name'                  => $request->namaLengkap,
+                'phone'                 => $request->nomorHp,
+                'address'               => $request->alamat,
+                'avatar'                => $avatar,
+                'gender'                => $request->jenisKelamin,
+                'marital_status'        => $request->statusNikah,
+                'skck'                  => $skck,
+                'ktp'                   => $ktp,
+                'employment_contract'   => $kontrak
             ]);
         } catch (QueryException $e) {
 
@@ -125,23 +147,45 @@ class EmployeeRepo
             $request->file('fotoKaryawan')->storeAs('foto-karyawan', $avatar, 'public');
         }
 
+        $ktp = $employee->ktp;
+        if($request->hasFile('fotoKtp')) {
+            $ktp = $ktp ?? Str::random(20).'.'.$request->fotoKtp->getClientOriginalExtension();
+            $request->file('fotoKtp')->storeAs('foto-ktp', $ktp, 'public');
+        }
+
+        $skck = $employee->skck;
+        if($request->hasFile('fotoSkck')) {
+            $skck = $skck ?? Str::random(20).'.'.$request->fotoSkck->getClientOriginalExtension();
+            $request->file('fotoSkck')->storeAs('foto-skck', $skck, 'public');
+        }
+
+        $kontrak = $employee->employment_contract;
+        if($request->hasFile('kontrakKerja')) {
+            $kontrak = $kontrak ?? Str::random(20).'.'.$request->kontrakKerja->getClientOriginalExtension();
+            $request->file('kontrakKerja')->storeAs('kontrak', $kontrak, 'public');
+        }
+
         $company_id = (auth()->user()->user_type == 'admin') ? $request->perusahaan : auth()->user()->company_id;
 
         DB::beginTransaction();
 
         try {
-            $employee->company_id       = $company_id;
-            $employee->division_id      = $request->divisi;
-            $employee->position_id      = $request->jabatan;
-            $employee->employee_type_id = $request->status;
-            $employee->level_id         = $request->golongan;
-            $employee->name             = $request->namaLengkap;
-            $employee->phone            = $request->nomorHp;
-            $employee->address          = $request->alamat;
-            $employee->avatar           = $avatar;
-            $employee->gender           = $request->jenisKelamin;
-            $employee->user->username   = $request->username;
-            $employee->user->password   = ($request->password) ? Hash::make($request->password) : $employee->user->password;
+            $employee->company_id           = $company_id;
+            $employee->division_id          = $request->divisi;
+            $employee->position_id          = $request->jabatan;
+            $employee->employee_type_id     = $request->status;
+            $employee->level_id             = $request->golongan;
+            $employee->name                 = $request->namaLengkap;
+            $employee->phone                = $request->nomorHp;
+            $employee->address              = $request->alamat;
+            $employee->avatar               = $avatar;
+            $employee->gender               = $request->jenisKelamin;
+            $employee->ktp                  = $ktp;
+            $employee->skck                 = $skck;
+            $employee->employment_contract  = $kontrak;
+            $employee->marital_status       = $request->statusNikah;
+            $employee->user->username       = $request->username;
+            $employee->user->password       = ($request->password) ? Hash::make($request->password) : $employee->user->password;
             $employee->push();
 
         } catch (QueryException $e) {

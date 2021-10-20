@@ -10,7 +10,9 @@
             <div class="card-header d-flex justify-content-between">
                 <h4>Data Jabatan</h4>
                 <div class="d-flex flex-row">
+                @can('mst-jabatan-create')
                     <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button>
+                @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -60,7 +62,7 @@
 				{ data: 'name', name: 'name' },
 				{ data: 'company', name: 'company' },
 				{ data: 'action', render: function(data, type, row){
-                    return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> <button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>`
+                    return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> @can('mst-jabatan-delete')<button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
                 } },
 			]
 		})

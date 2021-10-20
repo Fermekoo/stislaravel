@@ -31,7 +31,9 @@
 			</div>
 			<div class="modal-footer bg-whitesmoke br">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+				@canany(['mst-jabatan-create','mst-jabatan-update'])
 				<button type="button" class="btn btn-primary" id="btn-submit"></button>
+				@endcan
 			</div>
 		</div>
 	</div>

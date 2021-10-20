@@ -20,7 +20,7 @@
                             <div class="form-row">
                                 <div class="col-md-12 mb-3">
                                     <label style ="font-weight: bold;" >Role</label>
-                                    <input type="text" name="role_name" class="form-control" value="{{ explode('#',$modules['role'])[1] }}" required>
+                                    <input type="text" name="role_name" class="form-control" value="{{$modules['role'] }}" required>
                                 </div>
                             </div>
                         </div>

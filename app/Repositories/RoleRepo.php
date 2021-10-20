@@ -169,7 +169,7 @@ class RoleRepo
 
         return [
             'id'    => $role->id,
-            'role'  => $role->name,
+            'role'  => $role->display,
             'menus' => $new_modules
         ];
     }

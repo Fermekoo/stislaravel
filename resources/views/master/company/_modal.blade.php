@@ -38,7 +38,9 @@
 			</div>
 			<div class="modal-footer bg-whitesmoke br">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+				@canany(['mst-perusahaan-create','mst-perusahaan-update'])
 				<button type="button" class="btn btn-primary" id="btn-submit"></button>
+				@endcanany
 			</div>
 		</div>
 	</div>

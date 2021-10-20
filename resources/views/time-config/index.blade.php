@@ -56,7 +56,9 @@
                                     </div>
 
                                     <div class="text-right col-md-8">
+                                        @canany(['setting-absensi-create','setting-absensi-update'])
                                         <button type="submit" id="saveBtn" class="btn btn-success">Simpan Data <i class="la la-save position-right"></i></button>
+                                        @endcanany
                                     </div>
                                 </div>
                             </form>

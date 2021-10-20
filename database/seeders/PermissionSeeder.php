@@ -63,11 +63,6 @@ class PermissionSeeder extends Seeder
                         'childs'    => []
                     ],
                     [
-                        'menu'      => 'absensi',
-                        'name'      => 'Absensi',
-                        'childs'    => []
-                    ],
-                    [
                         'menu'      => 'setting-absensi',
                         'name'      => 'Setting Absensi',
                         'childs'    => []

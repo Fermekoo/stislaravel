@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Attendance\ConfigController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\Employee\EmployeeController;
+use App\Http\Controllers\Leave\ApprovalController;
 use App\Http\Controllers\Leave\QuotaController;
+use App\Http\Controllers\Leave\RequestController;
 use App\Http\Controllers\Master\CompanyController;
 use App\Http\Controllers\Master\DivisionController;
 use App\Http\Controllers\Master\EmployeeLevelController;
@@ -33,51 +36,51 @@ Route::group(['middleware' => ['auth']], function(){
     Route::group(['prefix' => 'master', 'as' => 'master.'], function(){
 
         Route::group(['prefix' => 'company', 'middleware' => 'user_type:admin'], function(){
-            Route::get('/',[CompanyController::class, 'index'])->name('company');
-            Route::get('/{id}',[CompanyController::class, 'detail'])->name('company.detail');
-            Route::delete('/{id}',[CompanyController::class, 'delete'])->name('company.delete');
-            Route::post('/data/json',[CompanyController::class, 'dataJson'])->name('company.json');
-            Route::post('/',[CompanyController::class, 'updateOrCreate'])->name('company.submit');
+            Route::get('/',[CompanyController::class, 'index'])->middleware('permission:mst-perusahaan-read')->name('company');
+            Route::get('/{id}',[CompanyController::class, 'detail'])->middleware('permission:mst-perusahaan-read')->name('company.detail');
+            Route::delete('/{id}',[CompanyController::class, 'delete'])->middleware('permission:mst-perusahaan-delete')->name('company.delete');
+            Route::post('/data/json',[CompanyController::class, 'dataJson'])->middleware('permission:mst-perusahaan-read')->name('company.json');
+            Route::post('/',[CompanyController::class, 'updateOrCreate'])->middleware('permission:mst-perusahaan-update|mst-perusahaan-create')->name('company.submit');
         });
 
         Route::group(['prefix' => 'division'], function(){
-            Route::get('/',[DivisionController::class, 'index'])->name('division');
-            Route::get('/{id}',[DivisionController::class, 'detail'])->name('division.detail');
-            Route::delete('/{id}',[DivisionController::class, 'delete'])->name('division.delete');
-            Route::post('/data/json',[DivisionController::class, 'dataJson'])->name('division.json');
-            Route::post('/',[DivisionController::class, 'updateOrCreate'])->name('division.submit');
+            Route::get('/',[DivisionController::class, 'index'])->middleware('permission:mst-divisi-read')->name('division');
+            Route::get('/{id}',[DivisionController::class, 'detail'])->middleware('permission:mst-divisi-read')->name('division.detail');
+            Route::delete('/{id}',[DivisionController::class, 'delete'])->middleware('permission:mst-divisi-delete')->name('division.delete');
+            Route::post('/data/json',[DivisionController::class, 'dataJson'])->middleware('permission:mst-divisi-read')->name('division.json');
+            Route::post('/',[DivisionController::class, 'updateOrCreate'])->middleware('permission:mst-divisi-create|mst-divisi-update')->name('division.submit');
         });
 
         Route::group(['prefix' => 'position'], function(){
-            Route::get('/',[PositionController::class, 'index'])->name('position');
-            Route::get('/{id}',[PositionController::class, 'detail'])->name('position.detail');
-            Route::delete('/{id}',[PositionController::class, 'delete'])->name('position.delete');
-            Route::post('/data/json',[PositionController::class, 'dataJson'])->name('position.json');
-            Route::post('/',[PositionController::class, 'updateOrCreate'])->name('position.submit');
+            Route::get('/',[PositionController::class, 'index'])->middleware('permission:mst-jabatan-read')->name('position');
+            Route::get('/{id}',[PositionController::class, 'detail'])->middleware('permission:mst-jabatan-read')->name('position.detail');
+            Route::delete('/{id}',[PositionController::class, 'delete'])->middleware('permission:mst-jabatan-delete')->name('position.delete');
+            Route::post('/data/json',[PositionController::class, 'dataJson'])->middleware('permission:mst-jabatan-read')->name('position.json');
+            Route::post('/',[PositionController::class, 'updateOrCreate'])->middleware('permission:mst-jabatan-update|mst-jabatan-create')->name('position.submit');
         });
 
         Route::group(['prefix' => 'leave-type'], function(){
-            Route::get('/',[LeaveTypeController::class, 'index'])->name('leave-type');
-            Route::get('/{id}',[LeaveTypeController::class, 'detail'])->name('leave-type.detail');
-            Route::delete('/{id}',[LeaveTypeController::class, 'delete'])->name('leave-type.delete');
-            Route::post('/data/json',[LeaveTypeController::class, 'dataJson'])->name('leave-type.json');
-            Route::post('/',[LeaveTypeController::class, 'updateOrCreate'])->name('leave-type.submit');
+            Route::get('/',[LeaveTypeController::class, 'index'])->middleware('permission:mst-jenis-cuti-read')->name('leave-type');
+            Route::get('/{id}',[LeaveTypeController::class, 'detail'])->middleware('permission:mst-jenis-cuti-read')->name('leave-type.detail');
+            Route::delete('/{id}',[LeaveTypeController::class, 'delete'])->middleware('permission:mst-jenis-cuti-delete')->name('leave-type.delete');
+            Route::post('/data/json',[LeaveTypeController::class, 'dataJson'])->middleware('permission:mst-jenis-cuti-read')->name('leave-type.json');
+            Route::post('/',[LeaveTypeController::class, 'updateOrCreate'])->middleware('permission:mst-jenis-cuti-create|mst-jenis-cuti-update')->name('leave-type.submit');
         });
 
         Route::group(['prefix' => 'employee-type'], function(){
-            Route::get('/',[EmployeeTypeController::class, 'index'])->name('employee-type');
-            Route::get('/{id}',[EmployeeTypeController::class, 'detail'])->name('employee-type.detail');
-            Route::delete('/{id}',[EmployeeTypeController::class, 'delete'])->name('employee-type.delete');
-            Route::post('/data/json',[EmployeeTypeController::class, 'dataJson'])->name('employee-type.json');
-            Route::post('/',[EmployeeTypeController::class, 'updateOrCreate'])->name('employee-type.submit');
+            Route::get('/',[EmployeeTypeController::class, 'index'])->middleware('permission:mst-status-karyawan-read')->name('employee-type');
+            Route::get('/{id}',[EmployeeTypeController::class, 'detail'])->middleware('permission:mst-status-karyawan-read')->name('employee-type.detail');
+            Route::delete('/{id}',[EmployeeTypeController::class, 'delete'])->middleware('permission:mst-status-karyawan-delete')->name('employee-type.delete');
+            Route::post('/data/json',[EmployeeTypeController::class, 'dataJson'])->middleware('permission:mst-status-karyawan-read')->name('employee-type.json');
+            Route::post('/',[EmployeeTypeController::class, 'updateOrCreate'])->middleware('permission:mst-status-karyawan-create|mst-status-karyawan-update')->name('employee-type.submit');
         });
 
         Route::group(['prefix' => 'employee-level'], function(){
-            Route::get('/',[EmployeeLevelController::class, 'index'])->name('employee-level');
-            Route::get('/{id}',[EmployeeLevelController::class, 'detail'])->name('employee-level.detail');
-            Route::delete('/{id}',[EmployeeLevelController::class, 'delete'])->name('employee-level.delete');
-            Route::post('/data/json',[EmployeeLevelController::class, 'dataJson'])->name('employee-level.json');
-            Route::post('/',[EmployeeLevelController::class, 'updateOrCreate'])->name('employee-level.submit');
+            Route::get('/',[EmployeeLevelController::class, 'index'])->middleware('permission:mst-golongan-karyawan-read')->name('employee-level');
+            Route::get('/{id}',[EmployeeLevelController::class, 'detail'])->middleware('permission:mst-golongan-karyawan-read')->name('employee-level.detail');
+            Route::delete('/{id}',[EmployeeLevelController::class, 'delete'])->middleware('permission:mst-golongan-karyawan-delete')->name('employee-level.delete');
+            Route::post('/data/json',[EmployeeLevelController::class, 'dataJson'])->middleware('permission:mst-golongan-karyawan-read')->name('employee-level.json');
+            Route::post('/',[EmployeeLevelController::class, 'updateOrCreate'])->middleware('permission:mst-golongan-karyawan-create|mst-golongan-karyawan-update')->name('employee-level.submit');
         });
     });
 
@@ -92,11 +95,11 @@ Route::group(['middleware' => ['auth']], function(){
     });
 
     Route::group(['prefix' => 'employee'], function() {
-        Route::get('/',[EmployeeController::class, 'index'])->name('employee');
-        Route::get('/{id}',[EmployeeController::class, 'detail'])->name('employee.detail');
-        Route::delete('/{id}',[EmployeeController::class, 'delete'])->name('employee.delete');
-        Route::post('/',[EmployeeController::class, 'updateOrCreate'])->name('employee.submit');
-        Route::post('/data/json',[EmployeeController::class, 'dataJson'])->name('employee.json');
+        Route::get('/',[EmployeeController::class, 'index'])->middleware('permission:data-karyawan-read')->name('employee');
+        Route::get('/{id}',[EmployeeController::class, 'detail'])->middleware('permission:data-karyawan-read')->name('employee.detail');
+        Route::delete('/{id}',[EmployeeController::class, 'delete'])->middleware('permission:data-karyawan-delete')->name('employee.delete');
+        Route::post('/',[EmployeeController::class, 'updateOrCreate'])->middleware('permission:data-karyawan-create|data-karyawan-update')->name('employee.submit');
+        Route::post('/data/json',[EmployeeController::class, 'dataJson'])->middleware('permission:data-karyawan-read')->name('employee.json');
     });
 
     Route::group(['prefix' => 'data', 'as' => 'data.'], function(){
@@ -110,29 +113,40 @@ Route::group(['middleware' => ['auth']], function(){
     });
 
     Route::group(['prefix' => 'user'], function(){
-        Route::get('/',[UserController::class, 'index'])->name('user');
-        Route::get('/{id}',[UserController::class, 'detail'])->name('user.detail');
-        Route::delete('/{id}',[UserController::class, 'delete'])->name('user.delete');
-        Route::post('/',[UserController::class, 'updateOrCreate'])->name('user.submit');
-        Route::post('/data/json',[UserController::class, 'dataJson'])->name('user.json');
+        Route::get('/',[UserController::class, 'index'])->middleware('permission:user-read')->name('user');
+        Route::get('/{id}',[UserController::class, 'detail'])->middleware('permission:user-read')->name('user.detail');
+        Route::delete('/{id}',[UserController::class, 'delete'])->middleware('permission:user-delete')->name('user.delete');
+        Route::post('/',[UserController::class, 'updateOrCreate'])->middleware('permission:user-create|user-update')->name('user.submit');
+        Route::post('/data/json',[UserController::class, 'dataJson'])->middleware('permission:user-read')->name('user.json');
     });
 
     Route::group(['prefix' => 'user-employee'], function(){
-        Route::post('assign-role',[UserController::class, 'assignRoleToEmployee'])->name('user-employee.submit');
-        Route::delete('delete/{model_id}/{role_id}',[UserController::class, 'deleteEmployeeRole'])->name('user-employee.delete');
+        Route::post('assign-role',[UserController::class, 'assignRoleToEmployee'])->middleware('permission:user-create|user-update')->name('user-employee.submit');
+        Route::delete('delete/{model_id}/{role_id}',[UserController::class, 'deleteEmployeeRole'])->middleware('permission:user-delete')->name('user-employee.delete');
     });
 
     Route::group(['prefix' => 'attendance-leave', 'as' => 'al.'], function(){
-        Route::get('time-config',[ConfigController::class, 'index'])->name('time-config');
-        Route::post('time-config',[ConfigController::class, 'updateTimeConfig'])->name('time-config.submit');
+        Route::get('time-config',[ConfigController::class, 'index'])->middleware('permission:setting-absensi-read')->name('time-config');
+        Route::post('time-config',[ConfigController::class, 'updateTimeConfig'])->middleware('permission:setting-absensi-create|setting-absensi-update')->name('time-config.submit');
 
-        Route::get('leave-quota',[QuotaController::class, 'index'])->name('leave-quota');
-        Route::get('leave-quota/{employee_id}',[QuotaController::class, 'getQuota'])->name('leave-quota-employee');
-        Route::post('leave-quota/{employee_id}',[QuotaController::class, 'setQuota'])->name('leave-quota-employee.submit');
-        Route::post('/data/json',[EmployeeController::class, 'dataJson'])->name('employee.json');
+        Route::get('leave-quota',[QuotaController::class, 'index'])->middleware('permission:jatah-cuti-read')->name('leave-quota');
+        Route::get('leave-quota/{employee_id}',[QuotaController::class, 'getQuota'])->middleware('permission:jatah-cuti-read')->name('leave-quota-employee');
+        Route::post('leave-quota/{employee_id}',[QuotaController::class, 'setQuota'])->middleware('permission:jatah-cuti-create|jatah-cuti-update')->name('leave-quota-employee.submit');
+        Route::post('/data/json',[EmployeeController::class, 'dataJson'])->middleware('permission:jatah-cuti-read')->name('employee.json');
+
+        Route::group(['middleware' => ['user_type:employee']], function(){
+            Route::get('request-leave',[RequestController::class, 'index'])->name('request-leave');
+            Route::get('request-leave/{id}',[RequestController::class, 'detail'])->name('request-leave.detail');
+            Route::delete('request-leave/{id}',[RequestController::class, 'delete'])->name('request-leave.delete');
+            Route::post('request-leave',[RequestController::class, 'updateOrCreate'])->name('request-leave.submit');
+            Route::post('request-leave/data/json',[RequestController::class, 'dataJson'])->name('request-leave.json');
+
+            Route::get('attendance',[AttendanceController::class, 'index'])->name('attendance');
+            Route::post('attendance',[AttendanceController::class, 'setAttendance'])->name('attendance.submit');
+        });
+        
+        Route::get('employee-leave',[ApprovalController::class, 'index'])->middleware('permission:cuti-read')->name('approval');
+        Route::post('employee-leave',[ApprovalController::class, 'updateStatus'])->middleware('permission:cuti-create|cuti-update')->name('approval.submit');
+        Route::post('employee-leave/data/json',[ApprovalController::class, 'dataJson'])->middleware('permission:cuti-read')->name('approval.json');
     });
-
-
 });
-
-

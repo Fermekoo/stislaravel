@@ -56,6 +56,9 @@ class EmployeeController extends Controller
                 return auth()->user()->user_type == 'admin';
             }),
             'fotoKaryawan' => 'nullable|image|mimes:jpg,png,jpeg',
+            'fotoKtp'      => 'nullable|image|mimes:jpg,png,jpeg',
+            'fotoSkck'     => 'nullable|image|mimes:jpg,png,jpeg',
+            'kontrakKerja' => 'nullable|mimes:pdf,doc,docx',
             'divisi'       => 'required',
             'jabatan'      => 'required',
             'golongan'     => 'required',

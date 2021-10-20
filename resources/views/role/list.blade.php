@@ -61,7 +61,7 @@
 				{
 					data: 'action',
 					render: function(data, type, row){
-						let btnDelete = (row.is_deleted) ? ` <a href="#" class="delete btn btn-danger btn-sm hapus-role" data-id="${row.id}" data-role="${row.name}">Hapus</a>` : ''
+						let btnDelete = (row.is_deleted) ? ` @can('role-delete')<a href="#" class="delete btn btn-danger btn-sm hapus-role" data-id="${row.id}" data-role="${row.name}">Hapus</a>@endcan` : ''
 						return `<a href="${row.action}" class="edit btn btn-info btn-sm edit-role">Edit</a>`+ btnDelete
 						
 					},

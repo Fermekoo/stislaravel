@@ -24,14 +24,16 @@
 					</div>
 					@endif
 					<div class="form-group">
-						<label>TIPE KARYAWAN</label>
+						<label>STATUS KARYAWAN</label>
 						<input type="text" class="form-control" id="tipeKaryawan" name="tipeKaryawan">
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer bg-whitesmoke br">
 				<button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+				@canany(['mst-status-karyawan-create','mst-status-karyawan-update'])
 				<button type="button" class="btn btn-primary" id="btn-submit"></button>
+				@endcanany
 			</div>
 		</div>
 	</div>

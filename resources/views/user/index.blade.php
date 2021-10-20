@@ -10,7 +10,9 @@
             <div class="card-header d-flex justify-content-between">
                 <h4>Data Akun User</h4>
                 <div class="d-flex flex-row">
+                @can('user-create')
                     <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button>
+                @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -64,7 +66,7 @@
 				{ data: 'email', name: 'email' },
 				{ data: 'role', name: 'role' },
 				{ data: 'action', render: function(data, type, row){
-                    return `@if(auth()->user()->user_type == 'admin')<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}" data-roleid="${row.roleid}"  title ="Edit"><i class="fa fa-edit"></i></button>@endif <button data-id="${row.id}" data-roleid="${row.roleid}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus" title ="Hapus" ><i class="fa fa-trash"></i></button>`
+                    return `@if(auth()->user()->user_type == 'admin')@can('user-update')<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}" data-roleid="${row.roleid}"  title ="Edit"><i class="fa fa-edit"></i></button>@endcan @endif @can('user-delete')<button data-id="${row.id}" data-roleid="${row.roleid}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus" title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
                 } },
 			]
 		})

@@ -69,9 +69,11 @@
                             </table>
                         </div>
                     </div>
+                    @can('role-create')
                     <button class="btn btn-success float-right mb-4 mr-2" href="#" id="simpan">
                         <i class="fa fa-save"></i> SIMPAN
                     </button>
+                    @endcan
                     <a class="btn btn-warning float-right mb-4 mr-2" href="{{ route('roles') }}"><i class="fa fa-angle-double-left"></i> KEMBALI</a>
             </div>
             </form>

@@ -10,7 +10,9 @@
             <div class="card-header d-flex justify-content-between">
                 <h4>Data Karyawan</h4>
                 <div class="d-flex flex-row">
+                @can('data-karyawan-create')
                     <button class="btn btn-success add-satuan" id="add-data">Tambah Data</button>
+                @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -49,6 +51,8 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        var default_img = `{{ asset('assets/img/news/img07.jpg') }}`;
 
         var table = $('#index-table').DataTable({
             paging: true,
@@ -93,7 +97,7 @@
                 {
                     data: 'action',
                     render: function(data, type, row) {
-                        return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> <button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>`
+                        return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> @can('data-karyawan-delete')<button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
                     }
                 },
             ]
@@ -140,7 +144,9 @@
                 url: action.replace(':id', id),
                 success: function(res) {
                     let data = res.data;
-                    let img  = `{{ asset('storage/foto-karyawan/${data.avatar}') }}`;
+                    let avatar  = (data.avatar) ? `{{ asset('storage/foto-karyawan/${data.avatar}') }}` : default_img;
+                    let ktp  = (data.ktp) ? `{{ asset('storage/foto-ktp/${data.ktp}') }}` : default_img;
+                    let skck  = (data.skck) ? `{{ asset('storage/foto-skck/${data.skck}') }}` : default_img;
 
                     getDivision(data.company_id, data.division_id);
                     getPosition(data.company_id, data.position_id);
@@ -148,13 +154,22 @@
                     getType(data.company_id, data.employee_type_id);
                    
                     $('#id').val(data.id);
-                    $('#img-upload').attr('src', img);
+                    $('#img-upload').attr('src', avatar);
+                    $('#img-upload-ktp').attr('src', ktp);
+                    $('#img-upload-skck').attr('src', skck);
                     $('#perusahaan').val(data.company_id).trigger('change');
                     $('#jenisKelamin').val(data.gender).trigger('change');
+                    $('#statusNikah').val(data.marital_status).trigger('change');
                     $('#namaLengkap').val(data.name);
                     $('#alamat').val(data.address);
                     $('#nomorHp').val(data.phone);
                     $('#username').val(data.user.username);
+                    if(data.employment_contract) {
+                        let contract = `{{ asset('storage/kontrak/${data.employment_contract}') }}`;
+                        $('#download_contract').attr('href',contract);
+                        $('#download_contract').show();
+                    }
+                    
 
                     titleCaption('Edit Data', 'Ubah');
 
@@ -249,7 +264,16 @@
                                 $('#password').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.password}</div>`)
                             }
                             if (msg.fotoKaryawan) {
-                                $('#avatar').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.fotoKaryawan}</div>`)
+                                $('#fotoKaryawan').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.fotoKaryawan}</div>`)
+                            }
+                            if (msg.fotoKtp) {
+                                $('#fotoKtp').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.fotoKtp}</div>`)
+                            }
+                            if (msg.fotoSkck) {
+                                $('#fotoSkck').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.fotoSkck}</div>`)
+                            }
+                            if (msg.kotrakKerja) {
+                                $('#kotrakKerja').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.kotrakKerja}</div>`)
                             }
                             if (msg.divisi) {
                                 $('#divisi').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.divisi}</div>`)
@@ -269,6 +293,9 @@
                             if (msg.jenisKelamin) {
                                 $('#jenisKelamin').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.jenisKelamin}</div>`)
                             }
+                            if (msg.statusNikah) {
+                                $('#statusNikah').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.statusNikah}</div>`)
+                            }
                             return
                         }
                         iziToast.error({
@@ -281,11 +308,15 @@
         })
 
         $('#company_modal').on('hidden.bs.modal', function() {
-            let default_img = `{{ asset('assets/img/avatar/avatar-1.png') }}`;
+            
+            $('#download_contract').hide();
             $('#id').val('');
             $('#state').val('');
             $('#perusahaan').val('').trigger('change');
-            $('#avatar').val('');
+            $('#fotoKaryawan').val('');
+            $('#fotoKtp').val('');
+            $('#fotoSkck').val('');
+            $('#kontrakKerja').val('');
             $('#namaLengkap').val('');
             $('#nomorHp').val('');
             $('#alamat').val('');
@@ -295,28 +326,53 @@
             $('#jabatan').val('').trigger('change');
             $('#golongan').val('').trigger('change');
             $('#status').val('').trigger('change');
-            $('#img-upload').attr('src', default_img)
+            $('#jenisKelamin').val('').trigger('change');
+            $('#statusNikah').val('').trigger('change');
+            $('#img-upload').attr('src', default_img);
+            $('#img-upload-ktp').attr('src', default_img);
+            $('#img-upload-npwp').attr('src', default_img);
             clearError();
         });
 
-        function readURL(input) {
+        function readURL(input, target) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 reader.onload = function(e) {
-                    $('#img-upload').attr('src', e.target.result);
+                    $(`#${target}`).attr('src', e.target.result);
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        $("#avatar").change(function() {
-            $('#img-upload').css({
+        $("#fotoKaryawan").change(function() {
+            let target = $(this).data('img');
+            $(`#${target}`).css({
                 width: 150,
                 heigth: 150
             })
-            readURL(this);
+            readURL(this, target);
         });
+
+        $("#fotoKtp").change(function() {
+            let target = $(this).data('img');
+            $(`#${target}`).css({
+                width: 150,
+                heigth: 150
+            })
+            readURL(this, target);
+        });
+
+        $("#fotoSkck").change(function() {
+            let target = $(this).data('img');
+            $(`#${target}`).css({
+                width: 150,
+                heigth: 150
+            })
+            readURL(this, target);
+        });
+        
     }); // end document ready
+    
 
     function getDivision(company_id, div_id) {
         let action = `{{ route('data.division',':id') }}`;
