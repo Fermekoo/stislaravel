@@ -122,7 +122,10 @@ class EmployeeRepo
                 'marital_status'        => $request->statusNikah,
                 'skck'                  => $skck,
                 'ktp'                   => $ktp,
-                'employment_contract'   => $kontrak
+                'employment_contract'   => $kontrak,
+                'nip'                   => $request->nip,
+                'birthdate'             => $request->tanggalLahir,
+                'join_date'             => $request->tanggalBergabung
             ]);
         } catch (QueryException $e) {
 
@@ -184,6 +187,9 @@ class EmployeeRepo
             $employee->skck                 = $skck;
             $employee->employment_contract  = $kontrak;
             $employee->marital_status       = $request->statusNikah;
+            $employee->nip                  = $request->nip;
+            $employee->birthdate            = $request->tanggalLahir;
+            $employee->join_date            = $request->tanggalBergabung;
             $employee->user->username       = $request->username;
             $employee->user->password       = ($request->password) ? Hash::make($request->password) : $employee->user->password;
             $employee->push();

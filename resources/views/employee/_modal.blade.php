@@ -53,12 +53,20 @@
 							<input type="text" class="form-control" id="namaLengkap" name="namaLengkap">
 						</div>
 						<div class="form-group col-md-6">
+							<label>NIP*</label>
+							<input type="text" class="form-control" id="nip" name="nip">
+						</div>
+						<div class="form-group col-md-6">
 							<label>JENIS KELAMIN*</label>
 							<select class="form-control select2" id="jenisKelamin" name="jenisKelamin">
 								<option value="">-PILIH-</option>
 								<option value="Laki-Laki">Laki-Laki</option>
 								<option value="Perempuan">Perempuan</option>
 							</select>
+						</div>
+						<div class="form-group col-md-6">
+							<label>TANGGAL LAHIR*</label>
+							<input type="text" class="form-control datepicker" id="tanggalLahir" name="tanggalLahir">
 						</div>
 						<div class="form-group col-md-6">
 							<label>STATUS NIKAH*</label>
@@ -78,7 +86,10 @@
 							<label>ALAMAT*</label>
 							<textarea class="form-control" id="alamat" name="alamat"></textarea>
 						</div>
-
+						<div class="form-group col-md-6">
+							<label>TANGGAL BERGABUNG*</label>
+							<input type="text" class="form-control datepicker" id="tanggalBergabung" name="tanggalBergabung">
+						</div>
 						<div class="form-group col-md-6">
 							<label>USERNAME*</label>
 							<input type="text" class="form-control" id="username" name="username">

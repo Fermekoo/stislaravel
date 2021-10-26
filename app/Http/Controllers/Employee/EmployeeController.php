@@ -55,20 +55,23 @@ class EmployeeController extends Controller
             'perusahaan'   => Rule::requiredIf(function(){
                 return auth()->user()->user_type == 'admin';
             }),
-            'fotoKaryawan' => 'nullable|image|mimes:jpg,png,jpeg',
-            'fotoKtp'      => 'nullable|image|mimes:jpg,png,jpeg',
-            'fotoSkck'     => 'nullable|image|mimes:jpg,png,jpeg',
-            'kontrakKerja' => 'nullable|mimes:pdf,doc,docx',
-            'divisi'       => 'required',
-            'jabatan'      => 'required',
-            'golongan'     => 'required',
-            'status'       => 'required',
-            'namaLengkap'  => 'required',
-            'jenisKelamin' => 'required|in:Laki-Laki,Perempuan',
-            'nomorHp'      => 'required|numeric',
-            'alamat'       => 'required',
-            'username'     => 'required|unique:users,username,'.$this->employeRepo->getUserId($request->employeeId),
-            'password'     => 'nullable|min:6'
+            'fotoKaryawan'      => 'nullable|image|mimes:jpg,png,jpeg',
+            'fotoKtp'           => 'nullable|image|mimes:jpg,png,jpeg',
+            'fotoSkck'          => 'nullable|image|mimes:jpg,png,jpeg',
+            'kontrakKerja'      => 'nullable|mimes:pdf,doc,docx',
+            'divisi'            => 'required',
+            'nip'               => 'required',
+            'tanggalLahir'      => 'required|date_format:Y-m-d',
+            'tanggalBergabung'  => 'required|date_format:Y-m-d',
+            'jabatan'           => 'required',
+            'golongan'          => 'required',
+            'status'            => 'required',
+            'namaLengkap'       => 'required',
+            'jenisKelamin'      => 'required|in:Laki-Laki,Perempuan',
+            'nomorHp'           => 'required|numeric',
+            'alamat'            => 'required',
+            'username'          => 'required|unique:users,username,'.$this->employeRepo->getUserId($request->employeeId),
+            'password'          => 'nullable|min:6'
         ]);
 
         if($validator->fails()){

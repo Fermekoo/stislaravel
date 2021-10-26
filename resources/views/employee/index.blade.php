@@ -46,6 +46,13 @@
 @push('js')
 <script>
     $(document).ready(function() {
+
+        $('.datepicker').datepicker({
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'yy-mm-dd'
+        });
+        
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -163,6 +170,9 @@
                     $('#namaLengkap').val(data.name);
                     $('#alamat').val(data.address);
                     $('#nomorHp').val(data.phone);
+                    $('#nip').val(data.nip);
+                    $('#tanggalLahir').val(data.birthdate);
+                    $('#tanggalBergabung').val(data.join_date);
                     $('#username').val(data.user.username);
                     if(data.employment_contract) {
                         let contract = `{{ asset('storage/kontrak/${data.employment_contract}') }}`;
@@ -296,6 +306,15 @@
                             if (msg.statusNikah) {
                                 $('#statusNikah').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.statusNikah}</div>`)
                             }
+                            if (msg.nip) {
+                                $('#nip').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.nip}</div>`)
+                            }
+                            if (msg.tanggalLahir) {
+                                $('#tanggalLahir').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.tanggalLahir}</div>`)
+                            }
+                            if (msg.tanggalBergabung) {
+                                $('#tanggalBergabung').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.tanggalBergabung}</div>`)
+                            }
                             return
                         }
                         iziToast.error({
@@ -322,6 +341,9 @@
             $('#alamat').val('');
             $('#username').val('');
             $('#password').val('');
+            $('#nip').val('');
+            $('#tanggalLahir').val('');
+            $('#tanggalBergabung').val('');
             $('#divisi').val('').trigger('change');
             $('#jabatan').val('').trigger('change');
             $('#golongan').val('').trigger('change');

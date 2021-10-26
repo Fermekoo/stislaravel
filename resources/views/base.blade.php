@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css">
 	<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
   <link rel="stylesheet" href="{{ asset('assets/css/iziToast.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/jquery-ui.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
   <!-- Template CSS -->
@@ -84,6 +85,7 @@
 
   <!-- JS Libraies -->
   <script src=" {{ asset('assets/js/iziToast.min.js') }}"></script>
+  <script src=" {{ asset('assets/js/jquery-ui.js') }}"></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Template JS File -->
   <script src="{{ asset('assets/js/scripts.js') }}"></script>

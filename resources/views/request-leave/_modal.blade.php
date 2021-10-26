@@ -23,11 +23,11 @@
 					</div>
 					<div class="form-group">
 						<label>TANGGAL MULAI CUTI*</label>
-						<input type="date" class="form-control" id="tanggalMulaiCuti" name="tanggalMulaiCuti">
+						<input type="text" class="form-control datepicker" id="tanggalMulaiCuti" name="tanggalMulaiCuti">
 					</div>
 					<div class="form-group">
 						<label>TANGGAL SELESAI CUTI*</label>
-						<input type="date" class="form-control" id="tanggalSelesaiCuti" name="tanggalSelesaiCuti">
+						<input type="text" class="form-control datepicker" id="tanggalSelesaiCuti" name="tanggalSelesaiCuti">
 					</div>
 					<div class="form-group">
 						<label>DURASI CUTI </label>
