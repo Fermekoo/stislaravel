@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Attendance\ConfigController;
+use App\Http\Controllers\Attendance\HistoryController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Master\LeaveTypeController;
 use App\Http\Controllers\Master\PositionController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\User\UserController;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Route;
 
 
@@ -148,5 +150,8 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('employee-leave',[ApprovalController::class, 'index'])->middleware('permission:cuti-read')->name('approval');
         Route::post('employee-leave',[ApprovalController::class, 'updateStatus'])->middleware('permission:cuti-create|cuti-update')->name('approval.submit');
         Route::post('employee-leave/data/json',[ApprovalController::class, 'dataJson'])->middleware('permission:cuti-read')->name('approval.json');
+
+        Route::get('history-attendance', [HistoryController::class, 'index'])->middleware('permission:absensi-karyawan-read')->name('history');
+        Route::post('history-attendance/data/json', [HistoryController::class, 'dataJson'])->middleware('permission:absensi-karyawan-read')->name('history.json');
     });
 });

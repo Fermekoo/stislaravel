@@ -102,4 +102,17 @@ class AttendanceRepo
 
         return $attendance;
     }
+
+    public function getAll()
+    {
+        $attendances = Attendance::when(auth()->user()->user_type != 'admin', function($query){
+            return $query->whereHas('employee', function($q){
+                $q->where('company_id', auth()->user()->company_id);
+            });
+        })
+        ->orderBy('check_in','desc')
+        ->get();
+
+        return $attendances;
+    }
 }

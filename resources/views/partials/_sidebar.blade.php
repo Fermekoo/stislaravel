@@ -52,6 +52,9 @@
                     @can('setting-absensi-read')
                     <li class="{{ request()->is('attendance-leave/time-config*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.time-config') }}">Setting Absensi</a></li>
                     @endcan
+                    @can('absensi-karyawan-read')
+                    <li class="{{ request()->is('attendance-leave/history-attendance*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.history') }}">Absensi Karyawan</a></li>
+                    @endcan
                     @can('jatah-cuti-read')
                     <li class="{{ request()->is('attendance-leave/leave-quota*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.leave-quota') }}">Jatah Cuti</a></li>
                     @endcan

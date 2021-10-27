@@ -1,10 +1,12 @@
 <?php
 namespace App\Repositories;
 
+use App\Models\Attendance;
 use App\Models\Employee;
 use App\Models\EmployeeLeave;
 use App\Models\LeaveQuota;
 use App\Models\LeaveType;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -196,6 +198,24 @@ class LeaveRepo
                 DB::rollBack();
                 throw $e;
             }
+
+            $periods = CarbonPeriod::create($leave->start_leave, $leave->end_leave);
+
+            foreach($periods as $period) :
+                try {
+                    Attendance::create([
+                        'employee_id' => $leave->employee_id,
+                        'check_in'    => $period,
+                        'leave_id'    => $leave->id
+                    ]);
+                } catch (QueryException $e) {
+                    Log::warning($e->getMessage());
+                    DB::rollBack();
+                    throw $e;
+                }
+            endforeach;
+
+
         endif;
 
         DB::commit();

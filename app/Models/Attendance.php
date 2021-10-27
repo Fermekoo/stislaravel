@@ -13,4 +13,9 @@ class Attendance extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
+
+    public function leave()
+    {
+        return $this->belongsTo(EmployeeLeave::class, 'leave_id');
+    }
 }

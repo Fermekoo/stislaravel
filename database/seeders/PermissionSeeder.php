@@ -68,6 +68,11 @@ class PermissionSeeder extends Seeder
                         'childs'    => []
                     ],
                     [
+                        'menu'      => 'absensi-karyawan',
+                        'name'      => 'Absensi Karyawan',
+                        'childs'    => []
+                    ],
+                    [
                         'menu'      => 'jatah-cuti',
                         'name'      => 'Jatah Cuti',
                         'childs'    => []
