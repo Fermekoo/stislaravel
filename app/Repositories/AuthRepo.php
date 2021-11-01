@@ -14,6 +14,8 @@ class AuthRepo
             throw new \Exception('User tidak terdaftar');
         }
 
+        if(!$user->is_active) throw new \Exception('Akun anda telah di nonaktifkan');
+
         if(Hash::check($request->password, $user->password)) {
            return auth()->loginUsingId($user->id, $request->rememberMe);
         }
