@@ -109,4 +109,17 @@ class EmployeeController extends Controller
 
         return $this->ok('data berhasil dihapus', 200);
     }
+
+    public function updateStatus($id)
+    {
+        try {
+
+            $this->employeRepo->updateStatus($id);
+
+        } catch (\Exception $e) {
+            return $this->bad($e->getMessage(), 500, $e->getMessage());
+        }
+
+        return $this->ok('data berhasil diubah', 200);
+    }
 }

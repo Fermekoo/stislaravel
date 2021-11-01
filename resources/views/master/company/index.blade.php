@@ -10,9 +10,9 @@
             <div class="card-header d-flex justify-content-between">
                 <h4>Data Perusahaan</h4>
                 <div class="d-flex flex-row">
-                @can('mst-perusahaan-create')
-                    <button class="btn btn-primary add-satuan" id="add-data">Tambah Data</button>
-                @endcan
+                    @can('mst-perusahaan-create')
+                    <button class="btn btn-success add-satuan" id="add-data">Tambah Data</button>
+                    @endcan
                 </div>
             </div>
             <div class="card-body">
@@ -24,8 +24,8 @@
                                 <th>Nama Perusahaan</th>
                                 <th>Nomor Telpon</th>
                                 <th>Alamat</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
+                                <th width="15%">Status</th>
+                                <th width="15%">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,35 +42,55 @@
 @endsection
 @push('js')
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-       var table = $('#index-table').DataTable({
-			paging: true,
-			processing: true,
-			serverSide: true,
-			ajax: {
+        var table = $('#index-table').DataTable({
+            paging: true,
+            processing: true,
+            serverSide: true,
+            ajax: {
                 type: 'POST',
                 url: '{{ route("master.company.json") }}'
             },
-			columns: [
-				{ data: 'company_code', name: 'company_code' },
-				{ data: 'name', name: 'name' },
-				{ data: 'phone', name: 'phone' },
-				{ data: 'address', name: 'address' },
-				{ data: 'status', name: 'status' },
-				{ data: 'action', render: function(data, type, row){
-                    return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> 
+            columns: [{
+                    data: 'company_code',
+                    name: 'company_code'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'phone',
+                    name: 'phone'
+                },
+                {
+                    data: 'address',
+                    name: 'address'
+                },
+                {
+                    data: 'status',
+                    render: function(data, type, row) {
+                        let btnColor = (row.status == 'Active') ? 'info' : 'warning'
+                        return `@can('mst-perusahaan-update')<button class="btn btn-${btnColor} btn-xs btnstatus" data-toggle="tooltip" data-original-title="Ubah Status" data-id="${row.id}" data-status="${row.status}" title ="Edit">${row.status}</button>@else ${row.status} @endif`
+                    }
+                },
+                {
+                    data: 'action',
+                    render: function(data, type, row) {
+                        return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}"  title ="Edit"><i class="fa fa-edit"></i></button> 
                     @can('mst-perusahaan-delete')<button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
-                } },
-			]
-		})
+                    }
+                },
+            ]
+        })
 
-        $('#add-data').click(function(){
+        $('#add-data').click(function() {
             titleCaption('Tambah Data', 'Simpan');
             $('#pw_caption').hide();
             $('#company_modal').modal({
@@ -80,14 +100,14 @@
             })
         });
 
-        $('#index-table').on('click','.btnedit', function(){
+        $('#index-table').on('click', '.btnedit', function() {
             $('#pw_caption').show();
             let id = $(this).data('id');
             let action = `{{ route('master.company.detail',':id') }}`;
             $.ajax({
                 type: `GET`,
                 url: action.replace(':id', id),
-                success: function(res){
+                success: function(res) {
                     let data = res.data;
                     $('#id').val(data.id);
                     $('#namaPerusahaan').val(data.name);
@@ -107,47 +127,89 @@
             })
         });
 
-        $('#index-table').on('click', '.btndelete', function(){
+        $('#index-table').on('click', '.btndelete', function() {
             let id = $(this).data('id');
             let action = `{{ route('master.company.delete',':id') }}`;
 
             swal({
-				title: 'Apakah Anda Yakin Ingin Menghapus ?',
-				text: 'Seluruh Data Yang Berkaitan Dengan Data Ini Akan Dihapus',
-				icon: 'warning',
-				buttons: true,
-				dangerMode: true,
-				})
-				.then((willDelete) => {
-					if (willDelete) {
-						$.ajax({
-							type: 'DELETE',
-							url: action.replace(':id', id),
-								success: function(res){
-										swal({
-											title: 'Hapus Data',
-											text: 'Hapus Data Sukses',
-											icon: 'success'
-										});
-									table.ajax.reload();
-								},
-								error: function(xhr){
-									var res = xhr.responseJSON;
-									if ($.isEmptyObject(res) == false) {
-										var errMsg = res.message;
-										iziToast.error({
-											title: errMsg,
-											position: 'topRight'
-										});
-									}
-								}
-			
-						}) 
-					}
-				});
-			});
+                title: 'Apakah Anda Yakin Ingin Menghapus ?',
+                text: 'Seluruh Data Yang Berkaitan Dengan Data Ini Akan Dihapus',
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: action.replace(':id', id),
+                        success: function(res) {
+                            swal({
+                                title: 'Hapus Data',
+                                text: 'Hapus Data Sukses',
+                                icon: 'success'
+                            });
+                            table.ajax.reload();
+                        },
+                        error: function(xhr) {
+                            var res = xhr.responseJSON;
+                            if ($.isEmptyObject(res) == false) {
+                                var errMsg = res.message;
+                                iziToast.error({
+                                    title: errMsg,
+                                    position: 'topRight'
+                                });
+                            }
+                        }
 
-        $('#btn-submit').click(function(e){
+                    })
+                }
+            });
+        });
+
+        $('#index-table').on('click', '.btnstatus', function() {
+            let id      = $(this).data('id');
+            let action  = `{{ route('master.company.status',':id') }}`;
+            let status  = $(this).data('status');
+                status  = (status == 'Active') ? 'Nonaktif' : 'Aktif'
+
+            swal({
+                title: 'Apakah anda yakin ingin mengubah status perusahaan ini?',
+                text: `Seluruh data user dari perusahaan ini akan ${status}`,
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willUpdate) => {
+                if (willUpdate) {
+                    $.ajax({
+                        type: 'POST',
+                        url: action.replace(':id', id),
+                        success: function(res) {
+                            swal({
+                                title: 'Ubah Status',
+                                text: res.message,
+                                icon: 'success'
+                            });
+                            table.ajax.reload();
+                        },
+                        error: function(xhr) {
+                            var res = xhr.responseJSON;
+                            if ($.isEmptyObject(res) == false) {
+                                var errMsg = res.message;
+                                iziToast.error({
+                                    title: errMsg,
+                                    position: 'topRight'
+                                });
+                            }
+                        }
+
+                    })
+                }
+            });
+        });
+
+        $('#btn-submit').click(function(e) {
             e.preventDefault();
 
             let form = $('#form_action');
@@ -161,29 +223,29 @@
                     table.ajax.reload();
                     $('#company_modal').modal('hide');
                     iziToast.success({
-						title: res.message,
-						position: 'topRight'
-					});
+                        title: res.message,
+                        position: 'topRight'
+                    });
                 },
-                error: function(xhr){
+                error: function(xhr) {
                     clearError();
                     let res = xhr.responseJSON;
-                    if($.isEmptyObject(res) == false) {
+                    if ($.isEmptyObject(res) == false) {
                         let msg = res.message;
-                        if(msg instanceof Object) {
-                            if(msg.namaPerusahaan) {
+                        if (msg instanceof Object) {
+                            if (msg.namaPerusahaan) {
                                 $('#namaPerusahaan').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.namaPerusahaan}</div>`)
                             }
-                            if(msg.alamat) {
+                            if (msg.alamat) {
                                 $('#alamat').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.alamat}</div>`)
                             }
-                            if(msg.nomorTelpon) {
+                            if (msg.nomorTelpon) {
                                 $('#nomorTelpon').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.nomorTelpon}</div>`)
                             }
-                            if(msg.username) {
+                            if (msg.username) {
                                 $('#username').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.username}</div>`)
                             }
-                            if(msg.password) {
+                            if (msg.password) {
                                 $('#password').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.password}</div>`)
                             }
                             return
@@ -193,7 +255,7 @@
             })
         })
 
-        $('#company_modal').on('hidden.bs.modal', function(){
+        $('#company_modal').on('hidden.bs.modal', function() {
             $('#id').val('');
             $('#namaPerusahaan').val('');
             $('#nomorTelpon').val('');
@@ -204,15 +266,15 @@
         });
     });
 
-    function titleCaption(title, button){
+    function titleCaption(title, button) {
         $('#modal_title').text(title);
         $('#btn-submit').text(button);
     }
 
-    function clearError(){
-		let form = $('#form_action');
-		form.find('.invalid-feedback').remove();
-		form.find('.form-control').removeClass('is-invalid');
-	}
+    function clearError() {
+        let form = $('#form_action');
+        form.find('.invalid-feedback').remove();
+        form.find('.form-control').removeClass('is-invalid');
+    }
 </script>
 @endpush

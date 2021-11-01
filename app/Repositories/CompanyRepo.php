@@ -90,4 +90,38 @@ class CompanyRepo
 
         return ($user) ? $user->id : null;
     }
+
+    public function updateStatus($company_id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $company = Company::findOrFail($company_id);
+            $new_status = ($company->status == 'Active') ? 'Non-Active' : 'Active';
+            $company->status = $new_status;
+            $company->save();
+
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Log::warning($e->getMessage());
+            throw $e;
+        } catch(\Exception $e){
+            DB::rollBack();
+            Log::warning($e->getMessage());
+            throw $e;
+        }
+
+        try {
+            User::where('company_id', $company->id)->update([
+                'is_active' => ($new_status == 'Active') ? true : false
+            ]);
+        } catch (QueryException $e) {
+            DB::rollBack();
+            Log::warning($e->getMessage());
+            throw $e;
+        }
+
+        DB::commit();
+        return true;
+    }
 }

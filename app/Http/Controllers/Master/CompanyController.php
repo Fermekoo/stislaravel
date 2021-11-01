@@ -73,4 +73,15 @@ class CompanyController extends Controller
 
         return $this->ok('data berhasil dihapus', 200);
     }
+
+    public function updateStatus($id)
+    {
+        try {
+            $this->companyRepo->updateStatus($id);
+        } catch (\Exception $e) {
+            return $this->bad('terjadi kesalahan', 500, $e->getMessage());
+        }
+
+        return $this->ok('data berhasil diubah', 200);
+    }
 }

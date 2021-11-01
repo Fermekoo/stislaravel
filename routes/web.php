@@ -40,6 +40,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::group(['prefix' => 'company', 'middleware' => 'user_type:admin'], function(){
             Route::get('/',[CompanyController::class, 'index'])->middleware('permission:mst-perusahaan-read')->name('company');
             Route::get('/{id}',[CompanyController::class, 'detail'])->middleware('permission:mst-perusahaan-read')->name('company.detail');
+            Route::post('/{id}',[CompanyController::class, 'updateStatus'])->middleware('permission:mst-perusahaan-update')->name('company.status');
             Route::delete('/{id}',[CompanyController::class, 'delete'])->middleware('permission:mst-perusahaan-delete')->name('company.delete');
             Route::post('/data/json',[CompanyController::class, 'dataJson'])->middleware('permission:mst-perusahaan-read')->name('company.json');
             Route::post('/',[CompanyController::class, 'updateOrCreate'])->middleware('permission:mst-perusahaan-update|mst-perusahaan-create')->name('company.submit');
@@ -101,6 +102,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('/{id}',[EmployeeController::class, 'detail'])->middleware('permission:data-karyawan-read')->name('employee.detail');
         Route::delete('/{id}',[EmployeeController::class, 'delete'])->middleware('permission:data-karyawan-delete')->name('employee.delete');
         Route::post('/',[EmployeeController::class, 'updateOrCreate'])->middleware('permission:data-karyawan-create|data-karyawan-update')->name('employee.submit');
+        Route::post('/{id}',[EmployeeController::class, 'updateStatus'])->middleware('permission:data-karyawan-update')->name('employee.status');
         Route::post('/data/json',[EmployeeController::class, 'dataJson'])->middleware('permission:data-karyawan-read')->name('employee.json');
     });
 

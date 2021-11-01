@@ -21,6 +21,7 @@ class EmployeeRepo
             'position:id,name',
             'type:id,name',
             'level:id,name',
+            'user:id,is_active'
         )->get();
     }
 
@@ -225,5 +226,22 @@ class EmployeeRepo
         $employee = Employee::find($employee_id);
 
         return ($employee) ? $employee->user_id : null;
+    }
+
+    public function updateStatus($employee_id)
+    {
+        $employee = Employee::auth()->findOrFail($employee_id);
+        if($employee->company->status == 'Non-Active' && !$employee->user->is_active) {
+            throw new \Exception("Perusahaan dari karyawan ini tidak aktif");
+        }
+
+        try {
+            $employee->user->is_active = ($employee->user->is_active) ? false : true;
+            $employee->push();
+            return true;
+        } catch (QueryException $e) {
+            Log::warning($e->getMessage());
+            throw $e;
+        }        
     }
 }

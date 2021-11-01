@@ -27,7 +27,8 @@
                                 <th>Jabatan</th>
                                 <th>Gender</th>
                                 <th>No HP</th>
-                                <th>Status</th>
+                                <th>Status Kontrak</th>
+                                <th width="15%">Status Akun</th>
                                 <th width="15%">Aksi</th>
                             </tr>
                         </thead>
@@ -100,6 +101,22 @@
                 {
                     data: 'type',
                     name: 'type'
+                },
+                {
+                    data: 'account_status',
+                    render: function(data, type, row){
+                        let status, btnColor
+
+                        if(row.user.is_active) {
+                             status = 'Active';
+                             btnColor = 'info';
+                        } else {
+                             status = 'Non-Active';
+                             btnColor = 'warning';
+                        }
+
+                        return `@can('data-karyawan-update')<button class="btn btn-${btnColor} btn-xs btnstatus" data-toggle="tooltip" data-original-title="Ubah Status" data-id="${row.id}" data-status="${status}" title ="Ubah Status">${status}</button>@else ${status} @endif`
+                    }
                 },
                 {
                     data: 'action',
@@ -230,6 +247,47 @@
                         })
                     }
                 });
+        });
+
+        $('#index-table').on('click', '.btnstatus', function() {
+            let id      = $(this).data('id');
+            let action  = `{{ route('employee.status',':id') }}`;
+            let status  = $(this).data('status');
+                status  = (status == 'Active') ? 'Nonaktif' : 'Aktif'
+
+            swal({
+                title: `Apakah anda yakin ingin ${status}kan karyawan ini?`,
+                icon: 'warning',
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willUpdate) => {
+                if (willUpdate) {
+                    $.ajax({
+                        type: 'POST',
+                        url: action.replace(':id', id),
+                        success: function(res) {
+                            swal({
+                                title: 'Ubah Status',
+                                text: res.message,
+                                icon: 'success'
+                            });
+                            table.ajax.reload();
+                        },
+                        error: function(xhr) {
+                            var res = xhr.responseJSON;
+                            if ($.isEmptyObject(res) == false) {
+                                var errMsg = res.message;
+                                iziToast.error({
+                                    title: errMsg,
+                                    position: 'topRight'
+                                });
+                            }
+                        }
+
+                    })
+                }
+            });
         });
 
         $('#btn-submit').click(function(e) {
