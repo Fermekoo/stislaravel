@@ -13,6 +13,13 @@ class APIKeyRepo
         return APIKey::auth()->get();
     }
 
+    public function findBy($field, $value, $first = true)
+    {
+        $apikey = APIKey::with('company','company.admin')->where($field, $value);
+
+        return ($first) ? $apikey->first() : $apikey->get();
+    }
+
     public function create($company_id, $payloads)
     {
         $key = CodeGenerator::generateKey();

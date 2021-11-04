@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('test', function(Request $request){      
+    return response()->json(['message' => auth()->user()]);
+})->middleware('auth:api');
+
+
+Route::group(['prefix' => 'v1', 'middleware' => ['auth:api','apikey'],'as' => 'api.'], function(){
+    Route::get('/employees',[EmployeeController::class, 'getAll'])->name('employee');
 });

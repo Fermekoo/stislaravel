@@ -5,9 +5,6 @@ trait ResponseTrait
 {
     protected function ok($message = '', $code = 200, $data = [])
 	{
-		if ($data === null || empty($data)) {
-			return response()->json(['code' => $code, 'message' => $message], $code);
-		}
 		return response()->json(['code' => $code, 'message' => $message, 'data' => $data], $code);
 	}
 
