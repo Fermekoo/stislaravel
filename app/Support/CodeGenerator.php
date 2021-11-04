@@ -1,10 +1,12 @@
 <?php 
 namespace App\Support;
 
+use App\Models\APIKey;
 use App\Models\Company;
 use App\Models\Division;
 use App\Models\Employee;
 use App\Models\Position;
+use Illuminate\Support\Str;
 
 class CodeGenerator
 {
@@ -46,5 +48,13 @@ class CodeGenerator
         $code = 'PGI-'.str_pad($new_id, 6, 0, STR_PAD_LEFT);
 
         return $code;
+    }
+
+    public static function generateKey()
+    {
+        $key = Str::random(32);
+        $check = APIKey::where('api_key', $key)->first();
+
+        return ($check) ? (self)->generateKey() : $key;
     }
 }

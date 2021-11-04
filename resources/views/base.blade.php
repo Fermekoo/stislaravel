@@ -86,6 +86,8 @@
   <!-- JS Libraies -->
   <script src=" {{ asset('assets/js/iziToast.min.js') }}"></script>
   <script src=" {{ asset('assets/js/jquery-ui.js') }}"></script>
+  <script src=" {{ asset('assets/js/jquery-mask.js') }}"></script>
+  <!-- <script src=" {{ asset('assets/js/dynamic-input.js') }}"></script> -->
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Template JS File -->
   <script src="{{ asset('assets/js/scripts.js') }}"></script>

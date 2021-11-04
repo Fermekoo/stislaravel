@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\APIKey\KeyController;
 use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Attendance\ConfigController;
 use App\Http\Controllers\Attendance\HistoryController;
@@ -155,5 +156,13 @@ Route::group(['middleware' => ['auth']], function(){
 
         Route::get('history-attendance', [HistoryController::class, 'index'])->middleware('permission:absensi-karyawan-read')->name('history');
         Route::post('history-attendance/data/json', [HistoryController::class, 'dataJson'])->middleware('permission:absensi-karyawan-read')->name('history.json');
+    });
+
+    Route::group(['prefix' => 'api-key'], function(){
+        Route::get('/',[KeyController::class, 'index'])->middleware('permission:api-key-read')->name('apikey');
+        Route::post('/',[KeyController::class, 'create'])->middleware('permission:api-key-create')->name('apikey.create');
+        Route::post('/{id}',[KeyController::class, 'changeStatus'])->middleware('permission:api-key-update|api-key-create')->name('apikey.change-status');
+        Route::delete('/{id}',[KeyController::class, 'delete'])->middleware('permission:api-key-delete')->name('apikey.delete');
+        Route::post('/data/json',[KeyController::class, 'dataJson'])->middleware('permission:api-key-read')->name('apikey.json');
     });
 });

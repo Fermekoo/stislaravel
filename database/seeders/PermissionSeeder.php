@@ -89,6 +89,11 @@ class PermissionSeeder extends Seeder
                 'name'      => 'Role',
                 'childs'    => []
             ],
+            [
+                'menu'      => 'api-key',
+                'name'      => 'API Key',
+                'childs'    => []
+            ],
         );
 
         $this->save($menus);

@@ -67,6 +67,9 @@
             @can('role-read')
             <li class="{{ request()->is('roles*') ? 'active' : ''}}"><a class="nav-link" href="{{ route('roles') }}"><i class="fas fa-cog"></i> <span>Roles</span></a></li>
             @endcan
+            @can('api-key-read')
+            <li class="{{ request()->is('api-key*') ? 'active' : ''}}"><a class="nav-link" href="{{ route('apikey') }}"><i class="fas fa-cog"></i> <span>API Key</span></a></li>
+            @endcan
         </ul>
     </aside>
 </div>
