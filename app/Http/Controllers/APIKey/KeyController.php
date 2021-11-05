@@ -94,4 +94,32 @@ class KeyController extends Controller
 
         return $this->ok('data berhasil diubah', 200);
     }
+
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id'            => 'required',
+            'whitelistIP'   => 'nullable|boolean',
+            'IPwhitelist'   => 'required_if:whitelistIP,true|array',
+            'IPwhitelist.*' => 'bail|required_if:whitelistIP,true'
+        ]);
+
+        if($validator->fails()){
+            $validation = $this->validatorMessage($validator);
+
+            return $this->bad($validation['data'], 400);
+        }
+
+        try {
+
+            $this->apiKey->update($request->id, $request);
+
+        } catch (\Exception $e) {
+            return $this->bad('terjadi kesalahan', 500, $e->getMessage());
+        }
+
+        return $this->ok('data berhasil disimpan', 200);
+
+
+    }
 }

@@ -161,6 +161,7 @@ Route::group(['middleware' => ['auth']], function(){
     Route::group(['prefix' => 'api-key'], function(){
         Route::get('/',[KeyController::class, 'index'])->middleware('permission:api-key-read')->name('apikey');
         Route::post('/',[KeyController::class, 'create'])->middleware('permission:api-key-create')->name('apikey.create');
+        Route::put('/',[KeyController::class, 'update'])->middleware('permission:api-key-update')->name('apikey.update');
         Route::post('/{id}',[KeyController::class, 'changeStatus'])->middleware('permission:api-key-update|api-key-create')->name('apikey.change-status');
         Route::delete('/{id}',[KeyController::class, 'delete'])->middleware('permission:api-key-delete')->name('apikey.delete');
         Route::post('/data/json',[KeyController::class, 'dataJson'])->middleware('permission:api-key-read')->name('apikey.json');

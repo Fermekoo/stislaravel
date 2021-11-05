@@ -23,7 +23,7 @@
                                 <th>No</th>
                                 <th>Nama Perusahaan</th>
                                 <th>Key</th>
-                                <th>IP Whitelist</th>
+                                <th width="20%">IP Whitelist</th>
                                 <th>Status</th>
                                 <th>Created By</th>
                                 <th width="15%">Aksi</th>
@@ -40,6 +40,7 @@
     </div>
 </section>
 @include('apikey._modal')
+@include('apikey._modal-ip')
 @endsection
 @push('js')
 <script>
@@ -99,7 +100,7 @@
                 {
                     data: 'action',
                     render: function(data, type, row) {
-                        return `@can('api-key-delete')<button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
+                        return `<button class="btn btn-success btn-xs btnedit" data-toggle="tooltip" data-original-title="Edit" data-id="${row.id}" data-key="${row.api_key}" data-ip_strict="${row.is_strict_ip}" data-whitelist="${row.whitelist_ip}"  title ="Edit"><i class="fa fa-edit"></i></button>         @can('api-key-delete')<button data-id="${row.id}" class="btn btn-danger btn-xs btndelete" data-toggle="tooltip" data-original-title="Hapus"  title ="Hapus" ><i class="fa fa-trash"></i></button>@endcan`
                     }
                 },
             ]
@@ -124,6 +125,49 @@
                 backdrop: 'static',
                 keyboard: false
             })
+        });
+
+        $('#index-table').on('click', '.btnedit', function(){
+
+            $('#customFieldsIP .ipv4').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+                translation: {
+                    'Z': {
+                        pattern: /[0-9]/,
+                        optional: true
+                    }
+                }
+            });
+
+            let strict_ip = $(this).data('ip_strict');
+
+            $('#id').val($(this).data('id'));
+            $('#apikey').val($(this).data('key'));
+            $('#whitelistIPx').prop('checked', strict_ip);
+            $('#modal_ip').modal('show');
+
+            let whitelist_ip = $(this).data('whitelist');
+    
+            if (strict_ip) {
+                $('#customFieldsIP').show();
+                let list_ip = ``;
+                whitelist_ip.split(',').forEach((ip, key) => {
+                    let btn = (key == 0 ) ? `<button type="button" class="btn btn-success addCF"><i class="fa fa-plus"></i></button>` : `<button type="button" class="btn btn-danger remCF"><i class="fa fa-trash"></i></button>`
+                    list_ip += `<div class="form-group baru-data">
+								<div class="input-group mb-3">
+									<input type="text" class="form-control ipv4" value="${ip}" name="IPwhitelist[]">
+									<div class="input-group-append">
+										${btn}
+									</div>
+								</div>
+							</div>`
+                });
+
+                $('#customFieldsIP').html(list_ip)
+
+            } else {
+                $('#customFieldsIP').hide();
+            }
+
         });
 
         $('#index-table').on('click', '.btndelete', function() {
@@ -209,6 +253,7 @@
 
         $('#btn-submit').click(function(e) {
             e.preventDefault();
+            $('#btn-submit').addClass('disabled btn-progress');
             let form = $('#form_action');
             $.ajax({
                 type: `POST`,
@@ -217,6 +262,7 @@
                 dataType: `json`,
                 success: function(res) {
                     table.ajax.reload();
+                    $('#btn-submit').removeClass('disabled btn-progress');
                     $('#company_modal').modal('hide');
                     iziToast.success({
                         title: res.message,
@@ -225,6 +271,45 @@
                 },
                 error: function(xhr) {
                     clearError();
+                    $('#btn-submit').removeClass('disabled btn-progress');
+                    let res = xhr.responseJSON;
+                    if ($.isEmptyObject(res) == false) {
+                        let msg = res.message;
+                        if (msg instanceof Object) {
+                            if (msg.perusahaan) {
+                                $('#perusahaan').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.perusahaan}</div>`)
+                            }
+                            if (msg.IPwhitelist) {
+                                $('#IPwhitelist').addClass('is-invalid').after(`<div class="invalid-feedback">${msg.IPwhitelist}</div>`)
+                            }
+                            return
+                        }
+                    }
+                }
+            })
+        });
+
+        $('#btn-submit-ip').click(function(e) {
+            e.preventDefault();
+            $('#btn-submit-ip').addClass('disabled btn-progress');
+            let form = $('#form_ip_action');
+            $.ajax({
+                type: `PUT`,
+                url: `{{ route('apikey.update') }}`,
+                data: form.serialize(),
+                dataType: `json`,
+                success: function(res) {
+                    $('#btn-submit-ip').removeClass('disabled btn-progress');
+                    table.ajax.reload();
+                    $('#modal_ip').modal('hide');
+                    iziToast.success({
+                        title: res.message,
+                        position: 'topRight'
+                    });
+                },
+                error: function(xhr) {
+                    clearError();
+                    $('#btn-submit-ip').removeClass('disabled btn-progress');
                     let res = xhr.responseJSON;
                     if ($.isEmptyObject(res) == false) {
                         let msg = res.message;
@@ -251,7 +336,27 @@
             clearError();
         });
 
+        $('#modal_ip').on('hidden.bs.modal', function() {
+            $('#id').val('');
+            $('#perusahaan').val('').trigger('change');
+            $('#customFieldsIP').hide()
+            $('#customFieldsIP .ipv4').val('')
+            $('#whitelistIPx').prop('checked', false);
+            clearError();
+        });
+
         $('#customFields').on('keyup', '.ipv4', function() {
+            $(this).mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+                translation: {
+                    'Z': {
+                        pattern: /[0-9]/,
+                        optional: true
+                    }
+                }
+            });
+        })
+
+        $('#customFieldsIP').on('keyup', '.ipv4', function() {
             $(this).mask('0ZZ.0ZZ.0ZZ.0ZZ', {
                 translation: {
                     'Z': {

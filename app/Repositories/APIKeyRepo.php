@@ -40,6 +40,19 @@ class APIKeyRepo
         return $key;
     }
 
+    public function update($id, $payloads)
+    {
+        $key = APIKey::auth()->findOrFail($id);
+        try {
+            $key->is_strict_ip  = $payloads->whitelistIP ?? false;
+            $key->whitelist_ip  = ($payloads->IPwhitelist && $payloads->whitelistIP) ? $payloads->IPwhitelist : null;
+            $key->save();
+        } catch (QueryException $e) {
+            Log::warning($e->getMessage());
+            throw $e;
+        }
+    }
+
     public function delete($id)
     {
         return APIKey::auth()->where('id',$id)->delete();
