@@ -69,6 +69,7 @@ class RequestController extends Controller
 
             return $this->bad($validation['data'], 400);
         }
+        
         $duration      = Carbon::parse($request->tanggalMulaiCuti)->diffInDays(Carbon::parse($request->tanggalSelesaiCuti)) + 1;
         $employee_id = auth()->user()->employee->id;
 

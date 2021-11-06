@@ -10,33 +10,34 @@
 			<div class="modal-body">
 				<form id="form_action">
 					@csrf
-					<input type="hidden" id="id" name="cutiId">
+					<input type="hidden" id="id" name="izinId">
 
 					<div class="form-group">
-						<label>JENIS CUTI*</label>
-						<select class="form-control select2" id="jenisCuti" name="jenisCuti" required>
+						<label>JENIS IZIN*</label>
+						<select class="form-control select2" id="jenisIzin" name="jenisIzin" required>
 							<option value="">-PILIH-</option>
-							@foreach(collect($leave_quota)->where('available_quota','>',0) as $quota)
-							<option value="{{ $quota['leave_type_id'] }}"> {{ $quota['leave_type'] }} ( {{ $quota['available_quota'] }} )</option>
+							@foreach(Constants::LEAVE_REQUEST as $lr)
+							<option value="{{ $lr }}"> {{ $lr }}</option>
 							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
-						<label>TANGGAL MULAI CUTI*</label>
-						<input type="text" class="form-control datepicker" id="tanggalMulaiCuti" name="tanggalMulaiCuti">
+						<label>TANGGAL MULAI IZIN*</label>
+						<input type="text" class="form-control datepicker" id="tanggalMulai" name="tanggalMulai">
 					</div>
 					<div class="form-group">
-						<label>TANGGAL SELESAI CUTI*</label>
-						<input type="text" class="form-control datepicker" id="tanggalSelesaiCuti" name="tanggalSelesaiCuti">
+						<label>TANGGAL SELESAI IZIN*</label>
+						<input type="text" class="form-control datepicker" id="tanggalSelesai" name="tanggalSelesai">
 					</div>
 					<div class="form-group">
-						<label>DURASI CUTI </label>
-						<input type="number" class="form-control" id="durasi" name="durasi" disabled>
+						<label>KETERANGAN</label>
+						<textarea class="form-control" id="keterangan" name="keterangan"></textarea>
 					</div>
 					<div class="form-group">
-							<label>KETERANGAN</label>
-							<textarea class="form-control" id="keterangan" name="keterangan"></textarea>
-						</div>
+						<label>DOKUMEN LAMPIRAN </label>
+						<input type="file" class="form-control" id="document" name="document">
+						<a href="" style="display:none" id="link_lampiran" download>Lihat Lampiran</a>
+					</div>
 				</form>
 			</div>
 			<div class="modal-footer bg-whitesmoke br">

@@ -45,6 +45,7 @@
                     @if(auth()->user()->user_type == 'employee')
                     <li class="{{ request()->is('attendance-leave/attendance*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.attendance') }}">Absensi</a></li>
                     <li class="{{ request()->is('attendance-leave/request-leave*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.request-leave') }}">Ajukan Cuti</a></li>
+                    <li class="{{ request()->is('attendance-leave/leave-request*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.leave-request') }}">Ajukan Izin</a></li>
                     @endif
                     @can('cuti-read')
                     <li class="{{ request()->is('attendance-leave/employee-leave*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.approval') }}">Cuti Karyawan</a></li>

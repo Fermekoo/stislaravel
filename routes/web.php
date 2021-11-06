@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Leave\ApprovalController;
+use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\Leave\QuotaController;
 use App\Http\Controllers\Leave\RequestController;
 use App\Http\Controllers\Master\CompanyController;
@@ -148,6 +149,12 @@ Route::group(['middleware' => ['auth']], function(){
 
             Route::get('attendance',[AttendanceController::class, 'index'])->name('attendance');
             Route::post('attendance',[AttendanceController::class, 'setAttendance'])->name('attendance.submit');
+
+            Route::get('leave-request',[LeaveController::class,'index'])->name('leave-request');
+            Route::get('leave-request/{id}',[LeaveController::class,'findById'])->name('leave-request.detail');
+            Route::delete('leave-request/{id}',[LeaveController::class,'delete'])->name('leave-request.delete');
+            Route::post('leave-request',[LeaveController::class,'updateOrCreate'])->name('leave-request.submit');
+            Route::post('leave-request/data/json',[LeaveController::class,'dataJson'])->name('leave-request.json');
         });
         
         Route::get('employee-leave',[ApprovalController::class, 'index'])->middleware('permission:cuti-read')->name('approval');

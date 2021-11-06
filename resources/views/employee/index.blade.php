@@ -292,7 +292,7 @@
 
         $('#btn-submit').click(function(e) {
             e.preventDefault();
-
+            $('#btn-submit').addClass('disabled btn-progress');
             let form = new FormData($('#form_action')[0]);
 
             $.ajax({
@@ -304,6 +304,7 @@
                 processData: false,
                 success: function(res) {
                     table.ajax.reload();
+                    $('#btn-submit').removeClass('disabled btn-progress');
                     $('#company_modal').modal('hide');
                     iziToast.success({
                         title: res.message,
@@ -311,6 +312,7 @@
                     });
                 },
                 error: function(xhr) {
+                    $('#btn-submit').removeClass('disabled btn-progress');
                     clearError();
                     let res = xhr.responseJSON;
                     if ($.isEmptyObject(res) == false) {
