@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Leave\ApprovalController;
+use App\Http\Controllers\Leave\ApprovalRequestController;
 use App\Http\Controllers\Leave\LeaveController;
 use App\Http\Controllers\Leave\QuotaController;
 use App\Http\Controllers\Leave\RequestController;
@@ -160,6 +161,10 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('employee-leave',[ApprovalController::class, 'index'])->middleware('permission:cuti-read')->name('approval');
         Route::post('employee-leave',[ApprovalController::class, 'updateStatus'])->middleware('permission:cuti-create|cuti-update')->name('approval.submit');
         Route::post('employee-leave/data/json',[ApprovalController::class, 'dataJson'])->middleware('permission:cuti-read')->name('approval.json');
+
+        Route::get('employee-leave-request',[ApprovalRequestController::class, 'index'])->middleware('permission:izin-read')->name('approval-request');
+        Route::post('employee-leave-request',[ApprovalRequestController::class, 'updateStatus'])->middleware('permission:izin-create|izin-update')->name('approval-request.submit');
+        Route::post('employee-leave-request/data/json',[ApprovalRequestController::class, 'dataJson'])->middleware('permission:izin-read')->name('approval-request.json');
 
         Route::get('history-attendance', [HistoryController::class, 'index'])->middleware('permission:absensi-karyawan-read')->name('history');
         Route::post('history-attendance/data/json', [HistoryController::class, 'dataJson'])->middleware('permission:absensi-karyawan-read')->name('history.json');

@@ -50,6 +50,9 @@
                     @can('cuti-read')
                     <li class="{{ request()->is('attendance-leave/employee-leave*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.approval') }}">Cuti Karyawan</a></li>
                     @endcan
+                    @can('cuti-read')
+                    <li class="{{ request()->is('attendance-leave/employee-leave-request*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.approval-request') }}">Izin Karyawan</a></li>
+                    @endcan
                     @can('setting-absensi-read')
                     <li class="{{ request()->is('attendance-leave/time-config*')  ? 'active' : ''}}"><a class="nav-link" href="{{ route('al.time-config') }}">Setting Absensi</a></li>
                     @endcan

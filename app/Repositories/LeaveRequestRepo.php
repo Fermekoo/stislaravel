@@ -1,8 +1,11 @@
 <?php 
 namespace App\Repositories;
 
+use App\Models\Attendance;
 use App\Models\LeaveRequest;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -66,17 +69,41 @@ class LeaveRequestRepo
         }
     }
 
-    public function approval($id, $status)
+    public function updateStatus($id, $status)
     {
         $leave = LeaveRequest::auth()->findOrFail($id);
 
+        DB::beginTransaction();
         try {
             $leave->status = $status;
             $leave->save();
         } catch (QueryException $e) {
+            DB::rollBack();
             Log::warning($e->getMessage());
             throw $e;
         }
+
+        if($status == 'Approve') :
+            $periods = CarbonPeriod::create($leave->start_date, $leave->end_date);
+
+            foreach($periods as $period) :
+                try {
+                    Attendance::create([
+                        'employee_id'       => $leave->employee_id,
+                        'check_in'          => $period,
+                        'attendance_type'   => 'izin',
+                        'leave_id'          => $leave->id
+                    ]);
+                } catch (QueryException $e) {
+                    Log::warning($e->getMessage());
+                    DB::rollBack();
+                    throw $e;
+                }
+            endforeach;
+        endif;
+
+        DB::commit();
+        return true;
     }
 
     public function delete($id)

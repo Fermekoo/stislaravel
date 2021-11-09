@@ -63,6 +63,11 @@ class PermissionSeeder extends Seeder
                         'childs'    => []
                     ],
                     [
+                        'menu'      => 'izin',
+                        'name'      => 'Izin Karyawan',
+                        'childs'    => []
+                    ],
+                    [
                         'menu'      => 'setting-absensi',
                         'name'      => 'Setting Absensi',
                         'childs'    => []

@@ -35,24 +35,38 @@ class HistoryController extends Controller
                     return date_format(date_create($row->check_in), 'd-M-Y');
                 })
                 ->editColumn('check_in', function($row){
-                    return ($row->leave) ? $row->leave->type->name : date_format(date_create($row->check_in), 'H:i:s');
+                    if($row->attendance_type == 'absensi') {
+                        return date_format(date_create($row->check_in), 'H:i:s');
+                    } else {
+                        return '-';
+                    }
                 })
                 ->editColumn('check_out', function($row){
-                    return ($row->leave) ? $row->leave->type->name : date_format(date_create($row->check_out), 'H:i:s');
+                    if($row->attendance_type == 'absensi') {
+                        return date_format(date_create($row->check_out), 'H:i:s');
+                    } else {
+                        return '-';
+                    }
                 })
                 ->addColumn('check_in_status', function($row){
-                    if($row->leave) {
-                        return $row->leave->type->name;
-                    } else {
+
+                    if($row->attendance_type == 'absensi') {
                         return ($row->is_late_attendance) ? 'Terlambat' : 'Tepat Waktu';
+                    } else if ($row->attendance_type == 'izin') {
+                        return $row->izin->request_type;
+                    } else {
+                        return $row->leave->type->name;
                     }
                 })
 
                 ->addColumn('check_out_status', function($row){
-                    if($row->leave) {
-                        return $row->leave->type->name;
-                    } else {
+
+                    if($row->attendance_type == 'absensi') {
                         return ($row->is_early_checkout) ? 'Pulang Cepat' : 'Tepat Waktu';
+                    } else if ($row->attendance_type == 'izin') {
+                        return $row->izin->request_type;
+                    } else {
+                        return $row->leave->type->name;
                     }
                 })
                 ->toJson();

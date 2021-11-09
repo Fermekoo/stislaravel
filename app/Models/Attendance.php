@@ -18,4 +18,9 @@ class Attendance extends Model
     {
         return $this->belongsTo(EmployeeLeave::class, 'leave_id');
     }
+
+    public function izin()
+    {
+        return $this->belongsTo(LeaveRequest::class, 'leave_id');
+    }
 }

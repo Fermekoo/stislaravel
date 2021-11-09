@@ -204,9 +204,10 @@ class LeaveRepo
             foreach($periods as $period) :
                 try {
                     Attendance::create([
-                        'employee_id' => $leave->employee_id,
-                        'check_in'    => $period,
-                        'leave_id'    => $leave->id
+                        'employee_id'       => $leave->employee_id,
+                        'check_in'          => $period,
+                        'attendance_type'   => 'cuti',
+                        'leave_id'          => $leave->id
                     ]);
                 } catch (QueryException $e) {
                     Log::warning($e->getMessage());
