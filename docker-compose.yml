@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  arunika:
+    tty: true
+    image: docker.io/bitnami/laravel:8
+    restart: always
+    ports:
+      - 4001:3000
+    volumes:
+      - ./:/app
+    entrypoint: [ "bash", "-c", "composer update && php artisan key:generate && php artisan storage:link && php artisan serve --host=0.0.0.0 --port=3000"]
