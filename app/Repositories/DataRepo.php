@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Division;
+use App\Models\Employee;
 use App\Models\EmployeeLevel;
 use App\Models\EmployeeType;
 use App\Models\LeaveType;
@@ -38,5 +39,10 @@ class DataRepo
     public function roles($company_id)
     {
         return Role::where('company_id', $company_id);
+    }
+
+    public function getEmployee($company_id)
+    {
+        return Employee::where('company_id', $company_id)->get();
     }
 }

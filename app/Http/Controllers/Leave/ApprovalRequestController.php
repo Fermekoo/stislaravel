@@ -41,6 +41,9 @@ class ApprovalRequestController extends Controller
                 ->editColumn('end_leave', function($row){
                     return date_format(date_create($row->end_date), 'd-M-Y');
                 })
+                ->addColumn('document_url', function($row){
+                    return asset('storage/document-izin/'.$row->document);
+                })
                 ->toJson();
 
         return $data;

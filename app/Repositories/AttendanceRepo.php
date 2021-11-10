@@ -103,12 +103,23 @@ class AttendanceRepo
         return $attendance;
     }
 
-    public function getAll()
+    public function getAll($request)
     {
-        $attendances = Attendance::when(auth()->user()->user_type != 'admin', function($query){
-            return $query->whereHas('employee', function($q){
-                $q->where('company_id', auth()->user()->company_id);
+        $company_id     = (auth()->user()->user_type == 'admin') ? $request->perusahaan : auth()->user()->company_id;
+        $karyawan_id    = $request->karyawan;
+        $start_date     = $request->start_date;
+        $end_date       = $request->end_date;
+
+        $attendances = Attendance::when($company_id != 'all', function($query) use($company_id){
+            return $query->whereHas('employee', function($q) use($company_id){
+                $q->where('company_id', $company_id);
             });
+        })
+        ->when($karyawan_id && $karyawan_id != 'all', function($query) use($karyawan_id){
+            return $query->where('employee_id', $karyawan_id);
+        })
+        ->when($start_date && $end_date, function($query) use($start_date, $end_date){
+            return $query->whereDate('check_in','>=', $start_date)->whereDate('check_in','<=', $end_date);
         })
         ->orderBy('check_in','desc')
         ->get();

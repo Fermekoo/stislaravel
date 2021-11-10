@@ -48,4 +48,11 @@ class DataController extends Controller
         return $this->ok('employee', 200, $employees);
     }
 
+    public function getEmployee($company_id)
+    {
+        $company_id = (auth()->user()->user_type == 'admin') ? $company_id : auth()->user()->company_id;
+
+        return $this->ok('employess', 200, $this->dataRepo->getEmployee($company_id));
+    }
+
 }

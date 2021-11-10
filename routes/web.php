@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('leave-type/{company_id}',[DataController::class, 'leaveType'])->name('leave-type');
         Route::get('employees-no-role',[DataController::class, 'employeesNoRole'])->name('employee');
         Route::get('time-config/{company_id}',[ConfigController::class, 'getTimeConfig'])->name('time-config');
+        Route::get('employees/{company_id}',[DataController::class, 'getEmployee'])->name('employees');
     });
 
     Route::group(['prefix' => 'user'], function(){
@@ -168,6 +169,7 @@ Route::group(['middleware' => ['auth']], function(){
 
         Route::get('history-attendance', [HistoryController::class, 'index'])->middleware('permission:absensi-karyawan-read')->name('history');
         Route::post('history-attendance/data/json', [HistoryController::class, 'dataJson'])->middleware('permission:absensi-karyawan-read')->name('history.json');
+        Route::get('history-attendance/export',[HistoryController::class, 'toExcel'])->middleware('permission:absensi-karyawan-read')->name('history.excel');
     });
 
     Route::group(['prefix' => 'api-key'], function(){

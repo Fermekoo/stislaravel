@@ -25,6 +25,7 @@
                                 <th>Tanggal Mulai</th>
                                 <th>Tanggal Selesai</th>
                                 <th>Status</th>
+                                <th>Dokumen</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -84,6 +85,12 @@
                 {
                     data: 'status',
                     name: 'status'
+                },
+                {
+                    data: 'document',
+                    render: function(data, type, row){
+                        return (row.document) ? `<a href="${row.document_url}" download>Download File</a>` : ''
+                    }
                 },
                 {
                     data: 'action',

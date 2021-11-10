@@ -17,7 +17,8 @@ class ViewServiceProvider extends ServiceProvider
             'master.employee-level._modal',
             'employee._modal',
             'time-config.index',
-            'apikey._modal'
+            'apikey._modal',
+            'history-attendance.index'
         ], CompanyComposer::class);
     }
 }
