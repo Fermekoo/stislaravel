@@ -36,6 +36,7 @@ Route::group(['middleware' => ['guest']], function(){
 
 Route::group(['middleware' => ['auth']], function(){
     Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
+    Route::post('/change-password',[AuthController::class, 'changePassword'])->name('change-password');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'master', 'as' => 'master.'], function(){

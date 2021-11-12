@@ -22,4 +22,18 @@ class AuthRepo
 
         throw new \Exception('username atau password salah');
     }
+
+    public function changePassword($user_id, $request)
+    {
+        $user = User::findOrFail($user_id);
+
+        if(Hash::check($request->passwordLama, $user->password)) {
+            $user->password = Hash::make($request->passwordBaru);
+            $user->save();
+
+            return $user;
+        }
+
+        throw new \Exception('password lama salah');
+    }
 }

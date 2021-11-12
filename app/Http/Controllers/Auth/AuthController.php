@@ -44,6 +44,29 @@ class AuthController extends Controller
         return redirect()->route('dashboard');
     }
 
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'passwordLama'          => 'required',
+            'passwordBaru'          => 'required',
+            'confirmPasswordBaru'   => 'required|same:passwordBaru',
+        ]);
+
+        if($validator->fails()){
+            $validation = $this->validatorMessage($validator);
+
+            return $this->bad($validation['data'], 400);
+        }
+
+        try {
+            $this->authRepo->changePassword(auth()->user()->id, $request);
+        } catch (\Exception $e) {
+            return $this->bad(['passwordLama' => $e->getMessage()], 400, $e->getMessage());
+        }
+
+        return $this->ok('password berhasil diubah', 200);
+    }
+
     public function logout()
     {
         auth()->logout();
