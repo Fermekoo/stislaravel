@@ -22,11 +22,11 @@
                             <tr>
                                 <th>Kode Karyawan</th>
                                 <th>Nama</th>
-                                <th>Perusahaan</th>
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
                                 <th>Gender</th>
                                 <th>No HP</th>
+                                <th>Foto</th>
                                 <th>Status Kontrak</th>
                                 <th width="15%">Status Akun</th>
                                 <th width="15%">Aksi</th>
@@ -79,10 +79,6 @@
                     name: 'name'
                 },
                 {
-                    data: 'company',
-                    name: 'company'
-                },
-                {
                     data: 'division',
                     name: 'division'
                 },
@@ -97,6 +93,15 @@
                 {
                     data: 'phone',
                     name: 'phone'
+                },
+                {
+                    data: 'image',
+                    render: function(data, type, row){
+                        let avatar  = (row.avatar) ? `{{ asset('storage/foto-karyawan/${row.avatar}') }}` : default_img;
+
+                        return `<img alt="image" src="${avatar}" class="rounded-circle mr-1" width="50" height="50">`
+
+                    }
                 },
                 {
                     data: 'type',
