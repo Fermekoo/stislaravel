@@ -1,0 +1,19 @@
+FROM registry-intl-internal.ap-southeast-5.aliyuncs.com/ponservice/inventory:base-0.0.1
+
+WORKDIR /app
+COPY . .
+
+COPY worker.conf /opt/docker/etc/supervisor.d/worker.conf
+
+RUN composer update \
+    && php artisan storage:link \
+    && php artisan jwt:secret --always-no 
+
+# Optimizing Configuration loading
+RUN php artisan config:cache
+# Optimizing View loading
+RUN php artisan view:cache
+# Optimizing 
+RUN php artisan optimize
+
+RUN chown -R application:application .
