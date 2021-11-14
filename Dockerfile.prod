@@ -6,8 +6,7 @@ COPY . .
 COPY worker.conf /opt/docker/etc/supervisor.d/worker.conf
 
 RUN composer update \
-    && php artisan storage:link \
-    && php artisan jwt:secret --always-no 
+    && php artisan storage:link 
 
 # Optimizing Configuration loading
 RUN php artisan config:cache
